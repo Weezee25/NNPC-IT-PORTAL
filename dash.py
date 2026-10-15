@@ -70,7 +70,7 @@ if not st.session_state["logged_in"]:
         if os.path.exists(LOGO_PATH):
             st.image(LOGO_PATH, width=180)
         else:
-            st.title(" NNPC")
+            st.title("🇳🇬 NNPC")
             
         st.markdown("### NEOL Internship Portal Sign-In")
         with st.form("login_visual_form"):
@@ -133,6 +133,18 @@ else:
     # 5. MAIN DASHBOARD CONTENT AREA
     # ==========================================
     if selected_nav == "Dashboard":
+        
+        # --- DYNAMIC DATE CALCULATIONS ADDED HERE ---
+        start_date = date(2026, 10, 1)
+        end_date = date(2027, 1, 25)
+        today = date.today()
+
+        days_left = max(0, (end_date - today).days)
+        total_days = (end_date - start_date).days
+        days_passed = (today - start_date).days
+        progress_pct = max(0, min(int((days_passed / total_days) * 100), 100))
+        # --------------------------------------------
+
         col_hb1, col_hb2 = st.columns([3.2, 1.8])
         with col_hb1:
             st.markdown("""
@@ -145,18 +157,19 @@ else:
                 </div>
             """, unsafe_allow_html=True)
         with col_hb2:
-            st.markdown("""
+            # Updated to an f-string to inject {progress_pct}
+            st.markdown(f"""
                 <div class="metric-card" style="background: linear-gradient(135deg, #00381C 0%, #004D25 100%); color: white; border: none;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <span style="font-size: 0.85rem; color: #FFD100; font-weight: bold;">📅 Internship Duration</span>
                         <span style="font-size: 0.85rem; background: #006837; padding: 2px 8px; border-radius: 10px;">Active</span>
                     </div>
                     <h3 style="margin: 8px 0 4px 0; font-size: 1.5rem; color: #FFFFFF;">16 Weeks</h3>
-                    <p style="font-size: 0.78rem; color: #D0D0D0; margin: 0;">Aug 1, 2026 – Nov 30, 2027</p>
+                    <p style="font-size: 0.78rem; color: #D0D0D0; margin: 0;">Oct 1, 2026 – Jan 25, 2027</p>
                     <hr style="border-color: rgba(255,255,255,0.15); margin: 10px 0;">
                     <div style="font-size: 0.78rem; display: flex; justify-content: space-between;">
                         <span>Overall Progress</span>
-                        <span style="color: #FFD100; font-weight: bold;">37%</span>
+                        <span style="color: #FFD100; font-weight: bold;">{progress_pct}%</span>
                     </div>
                 </div>
             """, unsafe_allow_html=True)
@@ -196,10 +209,11 @@ else:
                 </div>
             """, unsafe_allow_html=True)
         with m5:
-            st.markdown("""
+            # Updated to an f-string to inject {days_left}
+            st.markdown(f"""
                 <div class="metric-card">
                     <span style="font-size: 0.75rem; color: #666; font-weight: bold;">DAYS LEFT</span>
-                    <h3 style="margin: 5px 0; color: #006837; font-size: 1.4rem;">92</h3>
+                    <h3 style="margin: 5px 0; color: #006837; font-size: 1.4rem;">{days_left}</h3>
                     <span style="font-size: 0.72rem; color: #888;">Until Jan 25, 2027</span>
                 </div>
             """, unsafe_allow_html=True)
