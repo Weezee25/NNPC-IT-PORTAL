@@ -70,12 +70,12 @@ if not st.session_state["logged_in"]:
         if os.path.exists(LOGO_PATH):
             st.image(LOGO_PATH, width=180)
         else:
-            st.title("🇳🇬 NNPC")
+            st.title(" NNPC")
             
         st.markdown("### NEOL Internship Portal Sign-In")
         with st.form("login_visual_form"):
             uname = st.text_input("Full Name", value="Alex")
-            udept = st.selectbox("Department", ["Projects", "Subsurface", "ICT", "Facility", "Legal"])
+            udept = st.selectbox("Department", ["Projects", "Subsurface", "ICT", "Facility", "Legal", "Finance"])
             sub = st.form_submit_button("Launch Dashboard 🚀")
             
             if sub:
@@ -152,7 +152,7 @@ else:
                         <span style="font-size: 0.85rem; background: #006837; padding: 2px 8px; border-radius: 10px;">Active</span>
                     </div>
                     <h3 style="margin: 8px 0 4px 0; font-size: 1.5rem; color: #FFFFFF;">16 Weeks</h3>
-                    <p style="font-size: 0.78rem; color: #D0D0D0; margin: 0;">Oct 1, 2026 – Jan 25, 2027</p>
+                    <p style="font-size: 0.78rem; color: #D0D0D0; margin: 0;">Aug 1, 2026 – Nov 30, 2027</p>
                     <hr style="border-color: rgba(255,255,255,0.15); margin: 10px 0;">
                     <div style="font-size: 0.78rem; display: flex; justify-content: space-between;">
                         <span>Overall Progress</span>
