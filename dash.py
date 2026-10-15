@@ -135,8 +135,8 @@ else:
     if selected_nav == "Dashboard":
         
         # --- DYNAMIC DATE CALCULATIONS ADDED HERE ---
-        start_date = date(2026, 10, 1)
-        end_date = date(2027, 1, 25)
+        start_date = date(2026, 08, 3)
+        end_date = date(2026, 11, 30)
         today = date.today()
 
         days_left = max(0, (end_date - today).days)
@@ -165,7 +165,7 @@ else:
                         <span style="font-size: 0.85rem; background: #006837; padding: 2px 8px; border-radius: 10px;">Active</span>
                     </div>
                     <h3 style="margin: 8px 0 4px 0; font-size: 1.5rem; color: #FFFFFF;">16 Weeks</h3>
-                    <p style="font-size: 0.78rem; color: #D0D0D0; margin: 0;">Oct 1, 2026 – Jan 25, 2027</p>
+                    <p style="font-size: 0.78rem; color: #D0D0D0; margin: 0;">Aug 3, 2026 – Nov 30, 2026</p>
                     <hr style="border-color: rgba(255,255,255,0.15); margin: 10px 0;">
                     <div style="font-size: 0.78rem; display: flex; justify-content: space-between;">
                         <span>Overall Progress</span>
