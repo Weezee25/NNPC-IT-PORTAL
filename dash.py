@@ -135,7 +135,7 @@ else:
     if selected_nav == "Dashboard":
         
         # --- DYNAMIC DATE CALCULATIONS ADDED HERE ---
-        start_date = date(2026, 08, 3)
+        start_date = date(2026, 8, 3)
         end_date = date(2026, 11, 30)
         today = date.today()
 
