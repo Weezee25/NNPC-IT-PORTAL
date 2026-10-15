@@ -6,7 +6,7 @@ import os
 import base64
 
 # ==========================================
-# 1. PAGE CONFIG & THEME-COMPATIBLE CSS
+# 1. PAGE CONFIG & BULLETPROOF STYLING
 # ==========================================
 st.set_page_config(
     page_title="NNPC Internship Portal Dashboard",
@@ -15,118 +15,130 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Deep CSS Overrides to defeat Streamlit Dark Mode clashing
 st.markdown("""
     <style>
-    /* App Canvas Adaptation */
+    /* Force main app background */
     .stApp {
-        background-color: var(--background-color);
+        background-color: #F1F5F9 !important;
     }
     
-    /* Hero Banner (Locked Dark Green Theme) */
+    /* 1. HERO BANNER (Always Dark Green + White/Gold Text) */
     .hero-banner {
-        background: linear-gradient(135deg, #002B15 0%, #004D25 50%, #006837 100%);
+        background: linear-gradient(135deg, #002B15 0%, #004D25 50%, #006837 100%) !important;
         padding: 28px 35px;
         border-radius: 14px;
-        color: #FFFFFF !important;
         box-shadow: 0 6px 20px rgba(0,0,0,0.15);
         margin-bottom: 20px;
         border-bottom: 4px solid #FFD100;
     }
-    .hero-banner h2 { color: #FFD100 !important; }
-    .hero-banner p { color: #EFEFEF !important; }
-    .hero-banner span { color: #FFFFFF !important; }
+    .hero-banner * {
+        color: #FFFFFF !important;
+    }
+    .hero-banner h2 {
+        color: #FFD100 !important;
+    }
 
-    /* Metric Cards (Locked Light Theme with Explicit Dark Text) */
-    .metric-card {
+    /* 2. DYNAMIC METRIC CARDS (Always White Card + Dark Text) */
+    .metric-card-white {
         background-color: #FFFFFF !important;
-        color: #0F172A !important;
         padding: 18px 20px;
         border-radius: 12px;
         box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-        border: 1px solid #CBD5E1;
+        border: 1px solid #CBD5E1 !important;
         margin-bottom: 15px;
     }
-    .metric-card span { color: #475569 !important; }
-    .metric-card h3 { color: #006837 !important; }
-
-    /* Content Cards (Locked Light Theme with Explicit Dark Text) */
-    .content-card {
-        background-color: #FFFFFF !important;
+    .metric-card-white * {
         color: #0F172A !important;
+    }
+
+    /* 3. GENERAL CONTENT CARDS (Always White Card + Dark Text) */
+    .content-card-white {
+        background-color: #FFFFFF !important;
         padding: 20px;
         border-radius: 12px;
         box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-        border: 1px solid #CBD5E1;
+        border: 1px solid #CBD5E1 !important;
         margin-bottom: 20px;
     }
-    .content-card h4 { color: #002B15 !important; }
-    .content-card p, .content-card span, .content-card li, .content-card div, .content-card b {
-        color: #1E293B !important;
+    .content-card-white * {
+        color: #0F172A !important;
     }
 
-    /* Sidebar Theme Lock (Always Dark Green with White Text) */
+    /* 4. CURRICULUM BOXES */
+    .curr-box {
+        background-color: #F8FAFC !important;
+        border: 1px solid #CBD5E1 !important;
+        padding: 12px;
+        border-radius: 8px;
+        min-height: 140px;
+    }
+    .curr-box * {
+        color: #0F172A !important;
+    }
+
+    /* 5. SIDEBAR LOCK (Always Dark Green) */
     [data-testid="stSidebar"] {
         background-color: #002B15 !important;
     }
     [data-testid="stSidebar"] * {
         color: #FFFFFF !important;
     }
-    [data-testid="stSidebar"] .stRadio label p {
-        color: #FFFFFF !important;
+    
+    /* Top Header Greeting Text Override */
+    .top-greeting * {
+        color: #0F172A !important;
     }
     </style>
 """, unsafe_allow_html=True)
 
 LOGO_PATH = "nnpc.jpeg"
 
-# ==========================================
-# HELPER FUNCTION: INLINE PDF VIEWER
-# ==========================================
+# Helper function for inline PDF Preview
 def render_pdf_viewer(file_bytes):
-    """Embeds an interactive PDF viewer using HTML iframe."""
     base64_pdf = base64.b64encode(file_bytes).decode('utf-8')
     pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="550" type="application/pdf"></iframe>'
     st.markdown(pdf_display, unsafe_allow_html=True)
 
 # ==========================================
-# 2. DEPARTMENT CURRICULUM DATA DICTIONARY
+# 2. DEPARTMENT CURRICULUM DATA
 # ==========================================
 department_curriculums = {
     "Projects": [
-        {"week": "Week 1 – 4", "title": "Project Lifecycle & NUPRC Regulations", "deliv": "Regulatory Intelligence Framework Summary", "status": "✓ Completed", "color": "#059669"},
-        {"week": "Week 5 – 8", "title": "FEED & Costing Models", "deliv": "Facility Manifold Engineering Cost Model", "status": "⏳ In Progress", "color": "#D97706"},
-        {"week": "Week 9 – 12", "title": "Primavera P6 / MS Project Scheduling", "deliv": "Baseline Master Schedule for Pipeline Upgrade", "status": "🔒 Not Started", "color": "#6B7280"},
-        {"week": "Week 13 – 16", "title": "Site Inspections & Commissioning", "deliv": "Final Comprehensive Internship Project Report", "status": "🔒 Not Started", "color": "#6B7280"}
+        {"week": "Week 1 – 4", "title": "Project Lifecycle & Regulations", "deliv": "Regulatory Intelligence Summary", "status": "✓ Completed", "color": "#059669"},
+        {"week": "Week 5 – 8", "title": "FEED & Costing Models", "deliv": "Facility Manifold Cost Model", "status": "⏳ In Progress", "color": "#D97706"},
+        {"week": "Week 9 – 12", "title": "Primavera P6 Scheduling", "deliv": "Baseline Master Schedule", "status": "🔒 Not Started", "color": "#64748B"},
+        {"week": "Week 13 – 16", "title": "Site Inspections", "deliv": "Final Project Report", "status": "🔒 Not Started", "color": "#64748B"}
     ],
     "Subsurface": [
-        {"week": "Week 1 – 4", "title": "2D/3D Seismic Horizon Mapping", "deliv": "Seismic Horizon Mapping & Structural Framework Report", "status": "✓ Completed", "color": "#059669"},
-        {"week": "Week 5 – 8", "title": "Petrophysical Log Evaluation", "deliv": "Net Pay & Water Saturation Determination Sheet", "status": "⏳ In Progress", "color": "#D97706"},
-        {"week": "Week 9 – 12", "title": "Reservoir Material Balance Calculations", "deliv": "Reserves Estimation & Decline Curve Analysis", "status": "🔒 Not Started", "color": "#6B7280"},
-        {"week": "Week 13 – 16", "title": "Static & Dynamic Reservoir Modeling", "deliv": "Integrated Subsurface Reservoir Simulation Model", "status": "🔒 Not Started", "color": "#6B7280"}
+        {"week": "Week 1 – 4", "title": "2D/3D Seismic Horizon Mapping", "deliv": "Seismic Horizon Report", "status": "✓ Completed", "color": "#059669"},
+        {"week": "Week 5 – 8", "title": "Petrophysical Log Evaluation", "deliv": "Net Pay & Water Saturation", "status": "⏳ In Progress", "color": "#D97706"},
+        {"week": "Week 9 – 12", "title": "Reservoir Material Balance", "deliv": "Reserves Estimation Analysis", "status": "🔒 Not Started", "color": "#64748B"},
+        {"week": "Week 13 – 16", "title": "Reservoir Simulation", "deliv": "Integrated Subsurface Model", "status": "🔒 Not Started", "color": "#64748B"}
     ],
     "ICT": [
-        {"week": "Week 1 – 4", "title": "Network Infrastructure & Cybersecurity", "deliv": "Network Configuration Topology & Security Audit", "status": "✓ Completed", "color": "#059669"},
-        {"week": "Week 5 – 8", "title": "Enterprise Systems & Database Admin", "deliv": "User Management & Database Audit Report", "status": "⏳ In Progress", "color": "#D97706"},
-        {"week": "Week 9 – 12", "title": "Software Engineering & ITIL Service Desk", "deliv": "Internal Service Desk Automation Script", "status": "🔒 Not Started", "color": "#6B7280"},
-        {"week": "Week 13 – 16", "title": "Cloud Infrastructure & Deployment", "deliv": "Final Cloud Application System Deployment", "status": "🔒 Not Started", "color": "#6B7280"}
+        {"week": "Week 1 – 4", "title": "Network & Cybersecurity", "deliv": "Network Topology Audit", "status": "✓ Completed", "color": "#059669"},
+        {"week": "Week 5 – 8", "title": "Enterprise Database Admin", "deliv": "Database Security Audit", "status": "⏳ In Progress", "color": "#D97706"},
+        {"week": "Week 9 – 12", "title": "Software Engineering & ITIL", "deliv": "Service Desk Automation", "status": "🔒 Not Started", "color": "#64748B"},
+        {"week": "Week 13 – 16", "title": "Cloud Infrastructure", "deliv": "Cloud System Deployment", "status": "🔒 Not Started", "color": "#64748B"}
     ],
     "Facility": [
-        {"week": "Week 1 – 4", "title": "HVAC & Power Distribution Systems", "deliv": "Facility Equipment Maintenance Log & Safety Check", "status": "✓ Completed", "color": "#059669"},
-        {"week": "Week 5 – 8", "title": "HSE & Emergency Response Protocols", "deliv": "Departmental Hazard Identification Assessment", "status": "⏳ In Progress", "color": "#D97706"},
-        {"week": "Week 9 – 12", "title": "Asset Integrity & Building Management", "deliv": "Preventive Facility Maintenance Schedule", "status": "🔒 Not Started", "color": "#6B7280"},
-        {"week": "Week 13 – 16", "title": "Energy Efficiency & Auditing", "deliv": "Facility Energy Optimization Strategy Report", "status": "🔒 Not Started", "color": "#6B7280"}
+        {"week": "Week 1 – 4", "title": "HVAC & Power Systems", "deliv": "Maintenance Log & Safety Check", "status": "✓ Completed", "color": "#059669"},
+        {"week": "Week 5 – 8", "title": "HSE & Emergency Protocols", "deliv": "Hazard Identification Assessment", "status": "⏳ In Progress", "color": "#D97706"},
+        {"week": "Week 9 – 12", "title": "Asset Integrity Mgmt", "deliv": "Preventive Maintenance Schedule", "status": "🔒 Not Started", "color": "#64748B"},
+        {"week": "Week 13 – 16", "title": "Energy Efficiency & Auditing", "deliv": "Energy Optimization Strategy", "status": "🔒 Not Started", "color": "#64748B"}
     ],
     "Legal": [
-        {"week": "Week 1 – 4", "title": "Petroleum Industry Act (PIA) Framework", "deliv": "PIA Regulatory Impact Analysis Memo", "status": "✓ Completed", "color": "#059669"},
-        {"week": "Week 5 – 8", "title": "Production Sharing Contracts & Joint Ventures", "deliv": "Joint Venture Legal Contract Review Brief", "status": "⏳ In Progress", "color": "#D97706"},
-        {"week": "Week 9 – 12", "title": "Corporate Governance & Dispute Resolution", "deliv": "Arbitration & Legal Dispute Case Study", "status": "🔒 Not Started", "color": "#6B7280"},
-        {"week": "Week 13 – 16", "title": "Environmental & Energy Law Compliance", "deliv": "Regulatory Environmental Compliance Checklist", "status": "🔒 Not Started", "color": "#6B7280"}
+        {"week": "Week 1 – 4", "title": "PIA Framework", "deliv": "PIA Impact Analysis Memo", "status": "✓ Completed", "color": "#059669"},
+        {"week": "Week 5 – 8", "title": "Joint Venture Contracts", "deliv": "JV Legal Contract Brief", "status": "⏳ In Progress", "color": "#D97706"},
+        {"week": "Week 9 – 12", "title": "Corporate Governance", "deliv": "Arbitration & Legal Case Study", "status": "🔒 Not Started", "color": "#64748B"},
+        {"week": "Week 13 – 16", "title": "Environmental Energy Law", "deliv": "Compliance Checklist", "status": "🔒 Not Started", "color": "#64748B"}
     ],
     "Finance": [
-        {"week": "Week 1 – 4", "title": "Oil & Gas Cost Accounting Fundamentals", "deliv": "Cost Allocation & Financial Audit Report", "status": "✓ Completed", "color": "#059669"},
-        {"week": "Week 5 – 8", "title": "Joint Venture Cash Calls & Billing", "deliv": "Joint Venture Cash Call Reconciliation Sheet", "status": "⏳ In Progress", "color": "#D97706"},
-        {"week": "Week 9 – 12", "title": "CAPEX & OPEX Budget Forecasting", "deliv": "Quarterly Financial Forecast & Budget Model", "status": "🔒 Not Started", "color": "#6B7280"},
-        {"week": "Week 13 – 16", "title": "Tax Compliance & Financial Auditing", "deliv": "Final Corporate Tax Compliance Summary", "status": "🔒 Not Started", "color": "#6B7280"}
+        {"week": "Week 1 – 4", "title": "Oil & Gas Cost Accounting", "deliv": "Cost Allocation Audit Report", "status": "✓ Completed", "color": "#059669"},
+        {"week": "Week 5 – 8", "title": "JV Cash Calls & Billing", "deliv": "Cash Call Reconciliation Sheet", "status": "⏳ In Progress", "color": "#D97706"},
+        {"week": "Week 9 – 12", "title": "CAPEX & OPEX Budgeting", "deliv": "Quarterly Budget Forecast Model", "status": "🔒 Not Started", "color": "#64748B"},
+        {"week": "Week 13 – 16", "title": "Tax Compliance & Audit", "deliv": "Tax Compliance Summary", "status": "🔒 Not Started", "color": "#64748B"}
     ]
 }
 
@@ -193,10 +205,10 @@ else:
     top_col1, top_col2, top_col3, top_col4 = st.columns([3.5, 1, 1, 1.5])
     with top_col1:
         st.markdown(f"""
-            <div style="margin-top: 5px;">
-                <span style="color: var(--text-color, #475569); font-size: 0.95rem;">Good Morning,</span><br>
-                <span style="color: #006837; font-size: 1.6rem; font-weight: 700;">{st.session_state['username']} 👋</span><br>
-                <span style="color: var(--text-color, #64748B); font-size: 0.85rem;">Welcome to your NEOL Internship Portal</span>
+            <div class="top-greeting" style="margin-top: 5px;">
+                <span style="font-size: 0.95rem; color: #475569 !important;">Good Morning,</span><br>
+                <span style="font-size: 1.6rem; font-weight: 700; color: #006837 !important;">{st.session_state['username']} 👋</span><br>
+                <span style="font-size: 0.85rem; color: #64748B !important;">Welcome to your NEOL Internship Portal</span>
             </div>
         """, unsafe_allow_html=True)
     with top_col3:
@@ -240,14 +252,14 @@ else:
             """, unsafe_allow_html=True)
         with col_hb2:
             st.markdown(f"""
-                <div class="metric-card" style="background: linear-gradient(135deg, #00381C 0%, #004D25 100%) !important; color: white !important; border: none;">
+                <div class="hero-banner" style="padding: 20px;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <span style="font-size: 0.85rem; color: #FFD100 !important; font-weight: bold;">📅 Internship Duration</span>
                         <span style="font-size: 0.85rem; background: #006837; padding: 2px 8px; border-radius: 10px; color: white !important;">Active</span>
                     </div>
                     <h3 style="margin: 8px 0 4px 0; font-size: 1.5rem; color: #FFFFFF !important;">16 Weeks</h3>
                     <p style="font-size: 0.78rem; color: #D0D0D0 !important; margin: 0;">Oct 1, 2026 – Jan 25, 2027</p>
-                    <hr style="border-color: rgba(255,255,255,0.15); margin: 10px 0;">
+                    <hr style="border-color: rgba(255,255,255,0.2); margin: 10px 0;">
                     <div style="font-size: 0.78rem; display: flex; justify-content: space-between;">
                         <span style="color: #FFFFFF !important;">Overall Progress</span>
                         <span style="color: #FFD100 !important; font-weight: bold;">{progress_pct}%</span>
@@ -259,42 +271,42 @@ else:
         m1, m2, m3, m4, m5 = st.columns(5)
         with m1:
             st.markdown("""
-                <div class="metric-card">
-                    <span style="font-size: 0.75rem; font-weight: bold;">ATTENDANCE</span>
-                    <h3 style="margin: 5px 0; font-size: 1.4rem;">87%</h3>
-                    <span style="font-size: 0.72rem;">14 / 16 days</span>
+                <div class="metric-card-white">
+                    <span style="font-size: 0.75rem; font-weight: bold; color: #64748B !important;">ATTENDANCE</span>
+                    <h3 style="margin: 5px 0; font-size: 1.4rem; color: #006837 !important;">87%</h3>
+                    <span style="font-size: 0.72rem; color: #64748B !important;">14 / 16 days</span>
                 </div>
             """, unsafe_allow_html=True)
         with m2:
             st.markdown("""
-                <div class="metric-card">
-                    <span style="font-size: 0.75rem; font-weight: bold;">DELIVERABLES</span>
-                    <h3 style="margin: 5px 0; font-size: 1.4rem;">3 / 4</h3>
+                <div class="metric-card-white">
+                    <span style="font-size: 0.75rem; font-weight: bold; color: #64748B !important;">DELIVERABLES</span>
+                    <h3 style="margin: 5px 0; font-size: 1.4rem; color: #006837 !important;">3 / 4</h3>
                     <span style="font-size: 0.72rem; color: #D97706 !important;">Pending: 1</span>
                 </div>
             """, unsafe_allow_html=True)
         with m3:
             st.markdown("""
-                <div class="metric-card">
-                    <span style="font-size: 0.75rem; font-weight: bold;">ASSIGNMENTS</span>
-                    <h3 style="margin: 5px 0; font-size: 1.4rem;">2 / 4</h3>
+                <div class="metric-card-white">
+                    <span style="font-size: 0.75rem; font-weight: bold; color: #64748B !important;">ASSIGNMENTS</span>
+                    <h3 style="margin: 5px 0; font-size: 1.4rem; color: #006837 !important;">2 / 4</h3>
                     <span style="font-size: 0.72rem; color: #2563EB !important;">In Progress: 2</span>
                 </div>
             """, unsafe_allow_html=True)
         with m4:
             st.markdown("""
-                <div class="metric-card">
-                    <span style="font-size: 0.75rem; font-weight: bold;">COURSES</span>
-                    <h3 style="margin: 5px 0; font-size: 1.4rem;">4 / 5</h3>
-                    <span style="font-size: 0.72rem;">Completed: 4</span>
+                <div class="metric-card-white">
+                    <span style="font-size: 0.75rem; font-weight: bold; color: #64748B !important;">COURSES</span>
+                    <h3 style="margin: 5px 0; font-size: 1.4rem; color: #006837 !important;">4 / 5</h3>
+                    <span style="font-size: 0.72rem; color: #64748B !important;">Completed: 4</span>
                 </div>
             """, unsafe_allow_html=True)
         with m5:
             st.markdown(f"""
-                <div class="metric-card">
-                    <span style="font-size: 0.75rem; font-weight: bold;">DAYS LEFT</span>
-                    <h3 style="margin: 5px 0; font-size: 1.4rem;">{days_left}</h3>
-                    <span style="font-size: 0.72rem;">Until Jan 25, 2027</span>
+                <div class="metric-card-white">
+                    <span style="font-size: 0.75rem; font-weight: bold; color: #64748B !important;">DAYS LEFT</span>
+                    <h3 style="margin: 5px 0; font-size: 1.4rem; color: #006837 !important;">{days_left}</h3>
+                    <span style="font-size: 0.72rem; color: #64748B !important;">Until Jan 25, 2027</span>
                 </div>
             """, unsafe_allow_html=True)
 
@@ -306,12 +318,10 @@ else:
             active_curr = department_curriculums.get(current_dept, department_curriculums["Projects"])
 
             st.markdown(f"""
-                <div class="content-card">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                        <div>
-                            <h4 style="margin: 0;">📖 My Curriculum</h4>
-                            <p style="margin: 0; font-size: 0.8rem;">16-Week Training Roadmap — <b style="color: #006837 !important;">{current_dept} Department</b></p>
-                        </div>
+                <div class="content-card-white">
+                    <div style="margin-bottom: 12px;">
+                        <h4 style="margin: 0; color: #002B15 !important;">📖 My Curriculum</h4>
+                        <p style="margin: 0; font-size: 0.8rem; color: #475569 !important;">16-Week Training Roadmap — <b style="color: #006837 !important;">{current_dept} Department</b></p>
                     </div>
             """, unsafe_allow_html=True)
             
@@ -319,7 +329,7 @@ else:
             for i, phase in enumerate(active_curr):
                 with c_cols[i]:
                     st.markdown(f"""
-                        <div style="background: #F8FAFC; border: 1px solid #CBD5E1; padding: 12px; border-radius: 8px; min-height: 140px;">
+                        <div class="curr-box">
                             <span style="font-size: 0.72rem; color: #006837 !important; font-weight: bold;">{phase['week']}</span>
                             <p style="font-size: 0.8rem; font-weight: bold; margin: 4px 0; color: #0F172A !important;">{phase['title']}</p>
                             <hr style="margin: 6px 0; border-color: #CBD5E1;">
@@ -333,8 +343,8 @@ else:
             ov_col1, ov_col2 = st.columns([1, 1.7])
             with ov_col1:
                 st.markdown(f"""
-                    <div class="content-card">
-                        <h4 style="margin: 0 0 10px 0; font-size: 1rem;">📌 Internship Overview</h4>
+                    <div class="content-card-white">
+                        <h4 style="margin: 0 0 10px 0; font-size: 1rem; color: #002B15 !important;">📌 Internship Overview</h4>
                         <div style="font-size: 0.8rem;">
                             <p style="margin: 6px 0;"><b style="color: #0F172A !important;">Duration:</b> 16 Weeks</p>
                             <p style="margin: 6px 0;"><b style="color: #0F172A !important;">Start Date:</b> Oct 1, 2026</p>
@@ -346,8 +356,8 @@ else:
                 """, unsafe_allow_html=True)
             with ov_col2:
                 st.markdown("""
-                    <div class="content-card">
-                        <h4 style="margin: 0 0 5px 0; font-size: 1rem;">📅 Master Schedule & Milestones</h4>
+                    <div class="content-card-white">
+                        <h4 style="margin: 0 0 5px 0; font-size: 1rem; color: #002B15 !important;">📅 Master Schedule & Milestones</h4>
                         <p style="margin: 0 0 8px 0; font-size: 0.75rem; color: #64748B !important;">16-Week OML 18 Roadmap</p>
                 """, unsafe_allow_html=True)
                 
@@ -366,7 +376,15 @@ else:
                     color_discrete_map={"Milestone": "#FFD100", "Training": "#006837", "Assessment": "#00381C", "Field Visit": "#00A859", "Deadline": "#D32F2F"}
                 )
                 fig_gantt.update_yaxes(autorange="reversed")
-                fig_gantt.update_layout(template="plotly_white", height=195, margin=dict(t=5, b=5, l=5, r=5))
+                # Fix Plotly Chart Background & Font Contrast explicitly
+                fig_gantt.update_layout(
+                    template="plotly_white", 
+                    paper_bgcolor='#FFFFFF',
+                    plot_bgcolor='#F8FAFC',
+                    font=dict(color='#0F172A', size=11),
+                    height=260, 
+                    margin=dict(t=5, b=5, l=5, r=5)
+                )
                 st.plotly_chart(fig_gantt, use_container_width=True)
                 st.markdown("</div>", unsafe_allow_html=True)
 
@@ -374,9 +392,9 @@ else:
             b_col1, b_col2 = st.columns(2)
             with b_col1:
                 st.markdown("""
-                    <div class="content-card">
+                    <div class="content-card-white">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <h4 style="margin: 0; font-size: 0.95rem;">Attendance Overview</h4>
+                            <h4 style="margin: 0; font-size: 0.95rem; color: #002B15 !important;">Attendance Overview</h4>
                             <span style="font-size: 0.75rem; color: #006837 !important; font-weight: bold; cursor: pointer;">View Details →</span>
                         </div>
                 """, unsafe_allow_html=True)
@@ -385,8 +403,8 @@ else:
                     st.markdown("""
                         <div style="text-align: center; padding-top: 15px;">
                             <h2 style="color: #006837 !important; margin: 0; font-size: 2rem;">87%</h2>
-                            <p style="font-size: 0.72rem; margin: 0;">🟢 Present</p>
-                            <p style="font-size: 0.75rem; font-weight: bold; margin-top: 5px;">14 / 16 days</p>
+                            <p style="font-size: 0.72rem; margin: 0; color: #475569 !important;">🟢 Present</p>
+                            <p style="font-size: 0.75rem; font-weight: bold; margin-top: 5px; color: #0F172A !important;">14 / 16 days</p>
                         </div>
                     """, unsafe_allow_html=True)
                 with att_col2:
@@ -395,15 +413,24 @@ else:
                         "Days": [5, 5, 4, 5, 4, 5, 5, 4]
                     })
                     fig_att = px.bar(att_chart_data, x="Week", y="Days", color_discrete_sequence=["#006837"])
-                    fig_att.update_layout(template="plotly_white", height=130, margin=dict(t=5, b=5, l=5, r=5), xaxis_title=None, yaxis_title=None)
+                    fig_att.update_layout(
+                        template="plotly_white", 
+                        paper_bgcolor='#FFFFFF',
+                        plot_bgcolor='#F8FAFC',
+                        font=dict(color='#0F172A'),
+                        height=130, 
+                        margin=dict(t=5, b=5, l=5, r=5), 
+                        xaxis_title=None, 
+                        yaxis_title=None
+                    )
                     st.plotly_chart(fig_att, use_container_width=True)
                 st.markdown("</div>", unsafe_allow_html=True)
 
             with b_col2:
                 st.markdown("""
-                    <div class="content-card">
+                    <div class="content-card-white">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <h4 style="margin: 0; font-size: 0.95rem;">Deliverables Progress</h4>
+                            <h4 style="margin: 0; font-size: 0.95rem; color: #002B15 !important;">Deliverables Progress</h4>
                             <span style="font-size: 0.75rem; color: #006837 !important; font-weight: bold; cursor: pointer;">View All →</span>
                         </div>
                 """, unsafe_allow_html=True)
@@ -412,15 +439,15 @@ else:
                     st.markdown("""
                         <div style="text-align: center; padding-top: 15px;">
                             <h2 style="color: #006837 !important; margin: 0; font-size: 2rem;">75%</h2>
-                            <p style="font-size: 0.72rem; margin: 0;">✓ Completed</p>
-                            <p style="font-size: 0.75rem; font-weight: bold; margin-top: 5px;">3 / 4</p>
+                            <p style="font-size: 0.72rem; margin: 0; color: #475569 !important;">✓ Completed</p>
+                            <p style="font-size: 0.75rem; font-weight: bold; margin-top: 5px; color: #0F172A !important;">3 / 4</p>
                         </div>
                     """, unsafe_allow_html=True)
                 with del_col2:
                     st.markdown("""
                         <div style="font-size: 0.75rem; padding-top: 5px;">
-                            <p style="margin: 4px 0;">✔️ Regulatory Summary</p>
-                            <p style="margin: 4px 0;">✔️ Cost Model</p>
+                            <p style="margin: 4px 0; color: #0F172A !important;">✔️ Regulatory Summary</p>
+                            <p style="margin: 4px 0; color: #0F172A !important;">✔️ Cost Model</p>
                             <p style="margin: 4px 0; color: #D97706 !important;">🟡 Schedule Report</p>
                             <p style="margin: 4px 0; color: #94A3B8 !important;">⚪ Final Report</p>
                         </div>
@@ -429,8 +456,8 @@ else:
 
         with body_col2:
             st.markdown("""
-                <div class="content-card">
-                    <h4 style="margin: 0 0 12px 0;">⚡ Quick Actions</h4>
+                <div class="content-card-white">
+                    <h4 style="margin: 0 0 12px 0; color: #002B15 !important;">⚡ Quick Actions</h4>
             """, unsafe_allow_html=True)
             if st.button("➕ Add Attendance", use_container_width=True):
                 st.success("Attendance marked for today!")
@@ -443,24 +470,24 @@ else:
             st.markdown("</div>", unsafe_allow_html=True)
 
             st.markdown("""
-                <div class="content-card" style="border-left: 4px solid #FFD100 !important;">
-                    <h4 style="margin: 0 0 8px 0;">📢 Important Notice</h4>
-                    <p style="font-size: 0.85rem; font-weight: bold; margin: 0;">Next Departmental Review</p>
+                <div class="content-card-white" style="border-left: 4px solid #FFD100 !important;">
+                    <h4 style="margin: 0 0 8px 0; color: #002B15 !important;">📢 Important Notice</h4>
+                    <p style="font-size: 0.85rem; font-weight: bold; margin: 0; color: #0F172A !important;">Next Departmental Review</p>
                     <p style="font-size: 0.78rem; color: #64748B !important; margin: 2px 0 8px 0;">📅 Oct 28 – Oct 30, 2026</p>
-                    <p style="font-size: 0.75rem; margin: 0;">Ensure your logbook and deliverables are up to date before review.</p>
+                    <p style="font-size: 0.75rem; margin: 0; color: #334155 !important;">Ensure your logbook and deliverables are up to date before review.</p>
                 </div>
             """, unsafe_allow_html=True)
 
             st.markdown("""
-                <div class="content-card">
-                    <h4 style="margin: 0 0 10px 0;">🕒 Recent Activity</h4>
+                <div class="content-card-white">
+                    <h4 style="margin: 0 0 10px 0; color: #002B15 !important;">🕒 Recent Activity</h4>
                     <ul style="padding-left: 15px; font-size: 0.8rem; margin: 0;">
                         <li><b style="color: #0F172A !important;">Week 6 Report Submitted</b><br><span style="color: #64748B !important;">2 days ago</span></li>
-                        <hr style="margin: 6px 0; border-color: #E2E8F0;">
+                        <hr style="margin: 6px 0; border-color: #CBD5E1;">
                         <li><b style="color: #0F172A !important;">Attendance Marked</b><br><span style="color: #64748B !important;">3 days ago</span></li>
-                        <hr style="margin: 6px 0; border-color: #E2E8F0;">
+                        <hr style="margin: 6px 0; border-color: #CBD5E1;">
                         <li><b style="color: #0F172A !important;">New Course Unlocked</b><br><span style="color: #64748B !important;">5 days ago</span></li>
-                        <hr style="margin: 6px 0; border-color: #E2E8F0;">
+                        <hr style="margin: 6px 0; border-color: #CBD5E1;">
                         <li><b style="color: #0F172A !important;">Deliverable Updated</b><br><span style="color: #64748B !important;">FEED & Costing Document</span></li>
                     </ul>
                 </div>
@@ -475,7 +502,7 @@ else:
             """, unsafe_allow_html=True)
 
     # ==========================================
-    # 7. ONBOARDING & DELIVERABLE FILE VIEWER PAGE
+    # 7. DOCUMENT VIEWER & UPLOAD PAGE
     # ==========================================
     elif selected_nav in ["Onboarding Deck", "Submissions", "Deliverables"]:
         st.subheader(f"📄 {selected_nav} Document Viewer & Upload Portal")
@@ -484,9 +511,9 @@ else:
         
         with col_up1:
             st.markdown("""
-                <div class="content-card">
-                    <h4 style="margin-top: 0;">📤 Upload & View Documents</h4>
-                    <p style="font-size: 0.85rem;">Upload PDF reports, slides (.pptx), or logbooks. PDFs will render directly inside the interactive viewer on the right.</p>
+                <div class="content-card-white">
+                    <h4 style="margin-top: 0; color: #002B15 !important;">📤 Upload & View Documents</h4>
+                    <p style="font-size: 0.85rem; color: #334155 !important;">Upload PDF reports, slides (.pptx), or logbooks. PDFs will render directly inside the interactive viewer on the right.</p>
                 </div>
             """, unsafe_allow_html=True)
             
@@ -509,8 +536,8 @@ else:
         
         with col_up2:
             st.markdown("""
-                <div class="content-card">
-                    <h4 style="margin-top: 0;">👁️ Document Live Previewer</h4>
+                <div class="content-card-white">
+                    <h4 style="margin-top: 0; color: #002B15 !important;">👁️ Document Live Previewer</h4>
                 </div>
             """, unsafe_allow_html=True)
             
