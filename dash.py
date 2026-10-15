@@ -6,7 +6,7 @@ import os
 import base64
 
 # ==========================================
-# 1. PAGE CONFIG & BULLETPROOF STYLING
+# 1. PAGE CONFIG & UNIVERSAL THEME STYLING
 # ==========================================
 st.set_page_config(
     page_title="NNPC Internship Portal Dashboard",
@@ -15,20 +15,20 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Deep CSS Overrides to defeat Streamlit Dark Mode clashing
+# Deep CSS Overrides to lock card text & backgrounds across light & dark browser modes
 st.markdown("""
     <style>
-    /* Force main app background */
+    /* Force main app canvas background */
     .stApp {
         background-color: #F1F5F9 !important;
     }
     
-    /* 1. HERO BANNER (Always Dark Green + White/Gold Text) */
+    /* HERO BANNER (Always Dark Green + White/Gold Text) */
     .hero-banner {
         background: linear-gradient(135deg, #002B15 0%, #004D25 50%, #006837 100%) !important;
-        padding: 28px 35px;
+        padding: 26px 32px;
         border-radius: 14px;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.12);
         margin-bottom: 20px;
         border-bottom: 4px solid #FFD100;
     }
@@ -39,33 +39,35 @@ st.markdown("""
         color: #FFD100 !important;
     }
 
-    /* 2. DYNAMIC METRIC CARDS (Always White Card + Dark Text) */
+    /* WHITE CONTENT CARDS (Locked White Background + Dark Slate Text) */
+    .card-white {
+        background-color: #FFFFFF !important;
+        border: 1px solid #CBD5E1 !important;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .card-white, .card-white h1, .card-white h2, .card-white h3, .card-white h4, 
+    .card-white h5, .card-white p, .card-white span, .card-white div, 
+    .card-white li, .card-white b, .card-white td, .card-white th {
+        color: #0F172A !important;
+    }
+
+    /* METRIC CARDS */
     .metric-card-white {
         background-color: #FFFFFF !important;
-        padding: 18px 20px;
-        border-radius: 12px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
         border: 1px solid #CBD5E1 !important;
+        border-radius: 12px;
+        padding: 18px 20px;
         margin-bottom: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
     .metric-card-white * {
         color: #0F172A !important;
     }
 
-    /* 3. GENERAL CONTENT CARDS (Always White Card + Dark Text) */
-    .content-card-white {
-        background-color: #FFFFFF !important;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-        border: 1px solid #CBD5E1 !important;
-        margin-bottom: 20px;
-    }
-    .content-card-white * {
-        color: #0F172A !important;
-    }
-
-    /* 4. CURRICULUM BOXES */
+    /* CURRICULUM BOXES */
     .curr-box {
         background-color: #F8FAFC !important;
         border: 1px solid #CBD5E1 !important;
@@ -77,15 +79,18 @@ st.markdown("""
         color: #0F172A !important;
     }
 
-    /* 5. SIDEBAR LOCK (Always Dark Green) */
+    /* SIDEBAR LOCK (Always Dark Green) */
     [data-testid="stSidebar"] {
         background-color: #002B15 !important;
     }
     [data-testid="stSidebar"] * {
         color: #FFFFFF !important;
     }
-    
-    /* Top Header Greeting Text Override */
+    [data-testid="stSidebar"] .stRadio label p {
+        color: #FFFFFF !important;
+    }
+
+    /* GREETING TEXT OVERRIDE */
     .top-greeting * {
         color: #0F172A !important;
     }
@@ -97,7 +102,7 @@ LOGO_PATH = "nnpc.jpeg"
 # Helper function for inline PDF Preview
 def render_pdf_viewer(file_bytes):
     base64_pdf = base64.b64encode(file_bytes).decode('utf-8')
-    pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="550" type="application/pdf"></iframe>'
+    pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="520" type="application/pdf"></iframe>'
     st.markdown(pdf_display, unsafe_allow_html=True)
 
 # ==========================================
@@ -143,7 +148,7 @@ department_curriculums = {
 }
 
 # ==========================================
-# 3. SESSION STATE & NAVIGATION
+# 3. SESSION STATE INITIALIZATION
 # ==========================================
 if "logged_in" not in st.session_state:
     st.session_state["logged_in"] = False
@@ -151,7 +156,21 @@ if "username" not in st.session_state:
     st.session_state["username"] = "Alex"
 if "department" not in st.session_state:
     st.session_state["department"] = "Projects"
+if "submitted_reports" not in st.session_state:
+    st.session_state["submitted_reports"] = [
+        {"Week": "Week 1", "Topic": "Project Lifecycle & Regulations", "Date": "2026-10-05", "Status": "Approved"},
+        {"Week": "Week 5", "Topic": "FEED & Costing Document", "Date": "2026-10-14", "Status": "Pending Review"}
+    ]
+if "attendance_records" not in st.session_state:
+    st.session_state["attendance_records"] = [
+        {"Date": "2026-10-13", "Time": "07:28 AM", "Status": "On Time"},
+        {"Date": "2026-10-14", "Time": "07:25 AM", "Status": "On Time"},
+        {"Date": "2026-10-15", "Time": "07:31 AM", "Status": "On Time"}
+    ]
 
+# ==========================================
+# 4. LOGIN INTERFACE
+# ==========================================
 if not st.session_state["logged_in"]:
     col_l1, col_l2, col_l3 = st.columns([1, 1.5, 1])
     with col_l2:
@@ -161,7 +180,13 @@ if not st.session_state["logged_in"]:
         else:
             st.title("🇳🇬 NNPC")
             
-        st.markdown("### NEOL Internship Portal Sign-In")
+        st.markdown("""
+            <div class="card-white" style="margin-top: 15px;">
+                <h3 style="margin-top: 0; color: #006837 !important;">NEOL Internship Portal Sign-In</h3>
+                <p style="font-size: 0.88rem; color: #64748B !important;">NNPC Eighteen Operating Limited — OML 18 Asset Operations</p>
+            </div>
+        """, unsafe_allow_html=True)
+        
         with st.form("login_visual_form"):
             uname = st.text_input("Full Name", value="Alex")
             udept = st.selectbox("Department", ["Projects", "Subsurface", "ICT", "Facility", "Legal", "Finance"])
@@ -174,7 +199,7 @@ if not st.session_state["logged_in"]:
                 st.rerun()
 else:
     # ==========================================
-    # 4. SIDEBAR NAVIGATION
+    # 5. SIDEBAR NAVIGATION
     # ==========================================
     with st.sidebar:
         if os.path.exists(LOGO_PATH):
@@ -200,7 +225,7 @@ else:
         """, unsafe_allow_html=True)
 
     # ==========================================
-    # 5. TOP NAVBAR
+    # 6. TOP NAVBAR
     # ==========================================
     top_col1, top_col2, top_col3, top_col4 = st.columns([3.5, 1, 1, 1.5])
     with top_col1:
@@ -225,11 +250,11 @@ else:
     st.markdown("<br>", unsafe_allow_html=True)
 
     # ==========================================
-    # 6. MAIN DASHBOARD CONTENT AREA
+    # 7. ROUTING PAGE VIEWS
     # ==========================================
+
+    # --- DASHBOARD PAGE ---
     if selected_nav == "Dashboard":
-        
-        # Dynamic Date Math
         start_date = date(2026, 10, 1)
         end_date = date(2027, 1, 25)
         today = date.today()
@@ -267,7 +292,6 @@ else:
                 </div>
             """, unsafe_allow_html=True)
 
-        # Top Metric Cards Row
         m1, m2, m3, m4, m5 = st.columns(5)
         with m1:
             st.markdown("""
@@ -313,12 +337,11 @@ else:
         body_col1, body_col2 = st.columns([2.3, 1])
 
         with body_col1:
-            # Dynamic Curriculum Section
             current_dept = st.session_state['department']
             active_curr = department_curriculums.get(current_dept, department_curriculums["Projects"])
 
             st.markdown(f"""
-                <div class="content-card-white">
+                <div class="card-white">
                     <div style="margin-bottom: 12px;">
                         <h4 style="margin: 0; color: #002B15 !important;">📖 My Curriculum</h4>
                         <p style="margin: 0; font-size: 0.8rem; color: #475569 !important;">16-Week Training Roadmap — <b style="color: #006837 !important;">{current_dept} Department</b></p>
@@ -339,11 +362,10 @@ else:
                     """, unsafe_allow_html=True)
             st.markdown("</div>", unsafe_allow_html=True)
 
-            # Overview & Master Schedule
             ov_col1, ov_col2 = st.columns([1, 1.7])
             with ov_col1:
                 st.markdown(f"""
-                    <div class="content-card-white">
+                    <div class="card-white">
                         <h4 style="margin: 0 0 10px 0; font-size: 1rem; color: #002B15 !important;">📌 Internship Overview</h4>
                         <div style="font-size: 0.8rem;">
                             <p style="margin: 6px 0;"><b style="color: #0F172A !important;">Duration:</b> 16 Weeks</p>
@@ -356,7 +378,7 @@ else:
                 """, unsafe_allow_html=True)
             with ov_col2:
                 st.markdown("""
-                    <div class="content-card-white">
+                    <div class="card-white">
                         <h4 style="margin: 0 0 5px 0; font-size: 1rem; color: #002B15 !important;">📅 Master Schedule & Milestones</h4>
                         <p style="margin: 0 0 8px 0; font-size: 0.75rem; color: #64748B !important;">16-Week OML 18 Roadmap</p>
                 """, unsafe_allow_html=True)
@@ -376,7 +398,6 @@ else:
                     color_discrete_map={"Milestone": "#FFD100", "Training": "#006837", "Assessment": "#00381C", "Field Visit": "#00A859", "Deadline": "#D32F2F"}
                 )
                 fig_gantt.update_yaxes(autorange="reversed")
-                # Fix Plotly Chart Background & Font Contrast explicitly
                 fig_gantt.update_layout(
                     template="plotly_white", 
                     paper_bgcolor='#FFFFFF',
@@ -388,14 +409,13 @@ else:
                 st.plotly_chart(fig_gantt, use_container_width=True)
                 st.markdown("</div>", unsafe_allow_html=True)
 
-            # Bottom Analytics Panels
             b_col1, b_col2 = st.columns(2)
             with b_col1:
                 st.markdown("""
-                    <div class="content-card-white">
+                    <div class="card-white">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <h4 style="margin: 0; font-size: 0.95rem; color: #002B15 !important;">Attendance Overview</h4>
-                            <span style="font-size: 0.75rem; color: #006837 !important; font-weight: bold; cursor: pointer;">View Details →</span>
+                            <span style="font-size: 0.75rem; color: #006837 !important; font-weight: bold;">View Details →</span>
                         </div>
                 """, unsafe_allow_html=True)
                 att_col1, att_col2 = st.columns([1, 1.5])
@@ -428,10 +448,10 @@ else:
 
             with b_col2:
                 st.markdown("""
-                    <div class="content-card-white">
+                    <div class="card-white">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <h4 style="margin: 0; font-size: 0.95rem; color: #002B15 !important;">Deliverables Progress</h4>
-                            <span style="font-size: 0.75rem; color: #006837 !important; font-weight: bold; cursor: pointer;">View All →</span>
+                            <span style="font-size: 0.75rem; color: #006837 !important; font-weight: bold;">View All →</span>
                         </div>
                 """, unsafe_allow_html=True)
                 del_col1, del_col2 = st.columns([1, 1.4])
@@ -456,13 +476,13 @@ else:
 
         with body_col2:
             st.markdown("""
-                <div class="content-card-white">
+                <div class="card-white">
                     <h4 style="margin: 0 0 12px 0; color: #002B15 !important;">⚡ Quick Actions</h4>
             """, unsafe_allow_html=True)
             if st.button("➕ Add Attendance", use_container_width=True):
                 st.success("Attendance marked for today!")
             if st.button("📤 Submit Deliverable", use_container_width=True):
-                st.info("Opening deliverable submission upload form...")
+                st.info("Navigating to Submissions page...")
             if st.button("📊 View Reports", use_container_width=True):
                 st.info("Loading weekly report analytics...")
             if st.button("📥 Download Logbook", use_container_width=True):
@@ -470,7 +490,7 @@ else:
             st.markdown("</div>", unsafe_allow_html=True)
 
             st.markdown("""
-                <div class="content-card-white" style="border-left: 4px solid #FFD100 !important;">
+                <div class="card-white" style="border-left: 4px solid #FFD100 !important;">
                     <h4 style="margin: 0 0 8px 0; color: #002B15 !important;">📢 Important Notice</h4>
                     <p style="font-size: 0.85rem; font-weight: bold; margin: 0; color: #0F172A !important;">Next Departmental Review</p>
                     <p style="font-size: 0.78rem; color: #64748B !important; margin: 2px 0 8px 0;">📅 Oct 28 – Oct 30, 2026</p>
@@ -479,7 +499,7 @@ else:
             """, unsafe_allow_html=True)
 
             st.markdown("""
-                <div class="content-card-white">
+                <div class="card-white">
                     <h4 style="margin: 0 0 10px 0; color: #002B15 !important;">🕒 Recent Activity</h4>
                     <ul style="padding-left: 15px; font-size: 0.8rem; margin: 0;">
                         <li><b style="color: #0F172A !important;">Week 6 Report Submitted</b><br><span style="color: #64748B !important;">2 days ago</span></li>
@@ -487,8 +507,6 @@ else:
                         <li><b style="color: #0F172A !important;">Attendance Marked</b><br><span style="color: #64748B !important;">3 days ago</span></li>
                         <hr style="margin: 6px 0; border-color: #CBD5E1;">
                         <li><b style="color: #0F172A !important;">New Course Unlocked</b><br><span style="color: #64748B !important;">5 days ago</span></li>
-                        <hr style="margin: 6px 0; border-color: #CBD5E1;">
-                        <li><b style="color: #0F172A !important;">Deliverable Updated</b><br><span style="color: #64748B !important;">FEED & Costing Document</span></li>
                     </ul>
                 </div>
             """, unsafe_allow_html=True)
@@ -501,55 +519,189 @@ else:
                 </div>
             """, unsafe_allow_html=True)
 
-    # ==========================================
-    # 7. DOCUMENT VIEWER & UPLOAD PAGE
-    # ==========================================
-    elif selected_nav in ["Onboarding Deck", "Submissions", "Deliverables"]:
-        st.subheader(f"📄 {selected_nav} Document Viewer & Upload Portal")
+    # --- CURRICULUM PAGE ---
+    elif selected_nav == "Curriculum":
+        current_dept = st.session_state['department']
+        st.subheader(f"📖 16-Week Detailed Curriculum — {current_dept} Department")
         
-        col_up1, col_up2 = st.columns([1, 1.2])
+        active_curr = department_curriculums.get(current_dept, department_curriculums["Projects"])
         
-        with col_up1:
-            st.markdown("""
-                <div class="content-card-white">
-                    <h4 style="margin-top: 0; color: #002B15 !important;">📤 Upload & View Documents</h4>
-                    <p style="font-size: 0.85rem; color: #334155 !important;">Upload PDF reports, slides (.pptx), or logbooks. PDFs will render directly inside the interactive viewer on the right.</p>
+        for item in active_curr:
+            st.markdown(f"""
+                <div class="card-white" style="border-left: 5px solid #006837 !important;">
+                    <span style="font-size: 0.8rem; color: #006837 !important; font-weight: bold;">{item['week']}</span>
+                    <h3 style="margin: 4px 0 8px 0; color: #0F172A !important;">{item['title']}</h3>
+                    <p style="font-size: 0.88rem; color: #475569 !important;"><b>Key Deliverable:</b> {item['deliv']}</p>
+                    <span style="background: #F1F5F9; color: {item['color']} !important; padding: 4px 10px; border-radius: 6px; font-weight: bold; font-size: 0.8rem;">Status: {item['status']}</span>
                 </div>
             """, unsafe_allow_html=True)
-            
-            uploaded_doc = st.file_uploader(
-                "Select File to Upload & Preview", 
-                type=['pdf', 'pptx', 'docx', 'xlsx'],
-                key="doc_uploader"
-            )
-            
-            if uploaded_doc:
-                st.success(f"File `{uploaded_doc.name}` uploaded successfully!")
-                st.write(f"**File Type:** `{uploaded_doc.type}` | **Size:** `{uploaded_doc.size / 1024:.2f} KB`")
-                
-                st.download_button(
-                    label=f"📥 Download {uploaded_doc.name}",
-                    data=uploaded_doc.getvalue(),
-                    file_name=uploaded_doc.name,
-                    mime=uploaded_doc.type
-                )
-        
-        with col_up2:
-            st.markdown("""
-                <div class="content-card-white">
-                    <h4 style="margin-top: 0; color: #002B15 !important;">👁️ Document Live Previewer</h4>
-                </div>
-            """, unsafe_allow_html=True)
-            
-            if uploaded_doc is not None:
-                if uploaded_doc.name.endswith(".pdf"):
-                    st.info(f"Rendering PDF preview for `{uploaded_doc.name}`:")
-                    render_pdf_viewer(uploaded_doc.getvalue())
-                else:
-                    st.warning("Inline rendering is supported for PDF files. For PPTX, DOCX, and XLSX files, use the download button to open in your system viewer.")
-            else:
-                st.info("No file uploaded yet. Upload a PDF file using the uploader on the left to preview it directly on this screen.")
 
-    else:
-        st.subheader(f"📂 {selected_nav} Portal Module")
-        st.info(f"You are currently viewing the **{selected_nav}** module for the **{st.session_state['department']} Department**.")
+    # --- MASTER SCHEDULE PAGE ---
+    elif selected_nav == "Master Schedule":
+        st.subheader("📅 OML 18 Master Internship Schedule & Roadmap")
+        
+        st.markdown("""
+            <div class="card-white">
+                <h4 style="margin-top: 0;">16-Week Master Roadmap Timeline</h4>
+                <p style="font-size: 0.85rem;">Interactive Gantt Chart tracking orientation, milestones, assessments, and field visits across the 16-week cycle.</p>
+            </div>
+        """, unsafe_allow_html=True)
+        
+        schedule_data = pd.DataFrame([
+            {"Task": "General IT Orientation & HSE Briefing", "Start": "2026-10-01", "Finish": "2026-10-07", "Category": "Milestone"},
+            {"Task": "Departmental Onboarding & System Setup", "Start": "2026-10-08", "Finish": "2026-10-15", "Category": "Training"},
+            {"Task": "Phase 1 Progress Review & Logbook Check", "Start": "2026-10-28", "Finish": "2026-10-30", "Category": "Assessment"},
+            {"Task": "Field Logistics Base Visit (Alakiri/Cawthorne)", "Start": "2026-11-10", "Finish": "2026-11-17", "Category": "Field Visit"},
+            {"Task": "Mid-Term Technical Presentation", "Start": "2026-11-25", "Finish": "2026-11-27", "Category": "Assessment"},
+            {"Task": "Advanced Technical Mentorship", "Start": "2026-12-01", "Finish": "2026-12-20", "Category": "Training"},
+            {"Task": "Final Internship Capstone Defense", "Start": "2027-01-15", "Finish": "2027-01-18", "Category": "Milestone"},
+            {"Task": "Logbook Submission & Exit Closeout", "Start": "2027-01-20", "Finish": "2027-01-25", "Category": "Deadline"}
+        ])
+        
+        fig_gantt_full = px.timeline(
+            schedule_data, x_start="Start", x_end="Finish", y="Task", color="Category",
+            color_discrete_map={"Milestone": "#FFD100", "Training": "#006837", "Assessment": "#00381C", "Field Visit": "#00A859", "Deadline": "#D32F2F"}
+        )
+        fig_gantt_full.update_yaxes(autorange="reversed")
+        fig_gantt_full.update_layout(
+            template="plotly_white", paper_bgcolor='#FFFFFF', plot_bgcolor='#F8FAFC',
+            font=dict(color='#0F172A', size=12), height=380
+        )
+        st.plotly_chart(fig_gantt_full, use_container_width=True)
+
+    # --- SUBMISSIONS & DELIVERABLES PAGE ---
+    elif selected_nav in ["Submissions", "Deliverables"]:
+        st.subheader(f"📤 {selected_nav} & Logbook Submission Portal")
+        
+        col_s1, col_s2 = st.columns([1, 1.2])
+        
+        with col_s1:
+            st.markdown("""
+                <div class="card-white">
+                    <h4 style="margin-top: 0;">Submit Weekly Report / Deliverable</h4>
+                    <p style="font-size: 0.85rem;">Upload your weekly task summary, code, or PDF reports for supervisor review.</p>
+                </div>
+            """, unsafe_allow_html=True)
+            
+            with st.form("weekly_sub_form"):
+                week_num = st.selectbox("Select Week", [f"Week {i}" for i in range(1, 17)])
+                rep_topic = st.text_input("Report Title / Topic", placeholder="e.g. FEED & Costing Analysis")
+                rep_file = st.file_uploader("Upload Deliverable Document (PDF, PPTX)", type=['pdf', 'pptx', 'docx'])
+                submit_btn = st.form_submit_button("Submit Deliverable 🚀")
+                
+                if submit_btn and rep_topic:
+                    st.session_state["submitted_reports"].append({
+                        "Week": week_num,
+                        "Topic": rep_topic,
+                        "Date": str(date.today()),
+                        "Status": "Pending Review"
+                    })
+                    st.success(f"Deliverable for {week_num} successfully uploaded!")
+
+            st.markdown("#### 📜 Submitted Logbook History")
+            st.dataframe(pd.DataFrame(st.session_state["submitted_reports"]), use_container_width=True)
+
+        with col_s2:
+            st.markdown("""
+                <div class="card-white">
+                    <h4 style="margin-top: 0;">👁️ Interactive PDF Live Viewer</h4>
+                </div>
+            """, unsafe_allow_html=True)
+            
+            if 'rep_file' in locals() and rep_file is not None:
+                if rep_file.name.endswith('.pdf'):
+                    st.info(f"Previewing `{rep_file.name}`:")
+                    render_pdf_viewer(rep_file.getvalue())
+                else:
+                    st.warning("Inline preview is optimized for PDF files. Use the download button to open other file types.")
+            else:
+                st.info("Upload a PDF deliverable on the left to view it live in this window.")
+
+    # --- ONBOARDING DECK PAGE ---
+    elif selected_nav == "Onboarding Deck":
+        st.subheader("🖼️ NEOL Employee Onboarding & Orientation Handbook")
+        
+        col_o1, col_o2 = st.columns([1, 1.2])
+        with col_o1:
+            st.markdown("""
+                <div class="card-white">
+                    <h4 style="margin-top: 0;">OML 18 Orientation Deck</h4>
+                    <p style="font-size: 0.85rem;">Review standard operating guidelines, HSE rules, STAT-P core values, and organizational contacts.</p>
+                </div>
+            """, unsafe_allow_html=True)
+            
+            deck_file = st.file_uploader("Upload Handbook PDF / Slide Deck", type=['pdf', 'pptx'])
+            
+            st.markdown("""
+                <div class="card-white">
+                    <h4>📞 Key Support Contacts</h4>
+                    <ul style="font-size: 0.85rem; padding-left: 15px;">
+                        <li><b>Human Capital:</b> Mrs. Terdoo Ajayi (0806 890 8317)</li>
+                        <li><b>IT Support:</b> Mr. Oghenetejiri Okoro (0909 347 8095)</li>
+                        <li><b>HSSE Officer:</b> Mrs. Doris Osuji (0813 359 3746)</li>
+                        <li><b>Facility Mgmt:</b> Mr. David Amaju (0812 751 9856)</li>
+                    </ul>
+                </div>
+            """, unsafe_allow_html=True)
+
+        with col_o2:
+            if deck_file is not None and deck_file.name.endswith('.pdf'):
+                st.info(f"Previewing `{deck_file.name}`:")
+                render_pdf_viewer(deck_file.getvalue())
+            else:
+                st.info("Upload a PDF handbook on the left to preview slides here.")
+
+    # --- ATTENDANCE PAGE ---
+    elif selected_nav == "Attendance":
+        st.subheader("⏰ Daily Attendance & Clock-In Register")
+        
+        col_a1, col_a2 = st.columns([1, 1.5])
+        with col_a1:
+            st.markdown("""
+                <div class="card-white">
+                    <h4 style="margin-top: 0;">Clock In for Today</h4>
+                    <p style="font-size: 0.85rem;">Punctuality Rule: Head office resume time is 07:30 AM WAT.</p>
+                </div>
+            """, unsafe_allow_html=True)
+            
+            if st.button("📍 Clock In Now", use_container_width=True):
+                st.session_state["attendance_records"].append({
+                    "Date": str(date.today()),
+                    "Time": "07:29 AM",
+                    "Status": "On Time"
+                })
+                st.success("Attendance successfully recorded for today!")
+
+        with col_a2:
+            st.markdown("#### Attendance Log History")
+            st.dataframe(pd.DataFrame(st.session_state["attendance_records"]), use_container_width=True)
+
+    # --- REPORTS PAGE ---
+    elif selected_nav == "Reports":
+        st.subheader("📊 Analytics & Weekly Performance Reports")
+        
+        rep_df = pd.DataFrame({
+            "Department": ["Projects", "Subsurface", "ICT", "Facility", "Legal", "Finance"],
+            "Avg Completion (%)": [75, 80, 70, 85, 65, 90]
+        })
+        
+        fig_rep = px.bar(rep_df, x="Department", y="Avg Completion (%)", color="Department", color_discrete_sequence=["#006837", "#FFD100", "#00A859", "#00381C", "#0B6623", "#2563EB"])
+        fig_rep.update_layout(template="plotly_white", paper_bgcolor='#FFFFFF', plot_bgcolor='#F8FAFC', font=dict(color='#0F172A'), height=350)
+        st.plotly_chart(fig_rep, use_container_width=True)
+
+    # --- SETTINGS PAGE ---
+    elif selected_nav == "Settings":
+        st.subheader("⚙️ Portal Settings & User Preferences")
+        
+        st.markdown("""
+            <div class="card-white">
+                <h4 style="margin-top: 0;">User Profile Configuration</h4>
+            </div>
+        """, unsafe_allow_html=True)
+        
+        st.text_input("Full Name", value=st.session_state["username"])
+        st.selectbox("Assigned Department", ["Projects", "Subsurface", "ICT", "Facility", "Legal", "Finance"], index=["Projects", "Subsurface", "ICT", "Facility", "Legal", "Finance"].index(st.session_state['department']))
+        st.text_input("Official Corporate Email", value=f"{st.session_state['username'].lower().replace(' ', '.')}@nnpcgroup.com")
+        
+        if st.button("Save Profile Settings"):
+            st.success("Profile updated successfully!")
