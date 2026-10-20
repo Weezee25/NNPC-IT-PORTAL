@@ -94,6 +94,10 @@ st.markdown("""
     .top-greeting * {
         color: #0F172A !important;
     }
+
+    /* Expander & Tabs Lock for Curriculum Page */
+    .streamlit-expanderHeader { color: #002B15 !important; font-weight: bold; }
+    [data-baseweb="tab-list"] button [data-testid="stMarkdownContainer"] p { color: #0F172A !important; font-weight: 600; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -106,44 +110,332 @@ def render_pdf_viewer(file_bytes):
     st.markdown(pdf_display, unsafe_allow_html=True)
 
 # ==========================================
-# 2. DEPARTMENT CURRICULUM DATA
+# 2. MASSIVE INTERACTIVE DEPARTMENT CURRICULUM DATA
 # ==========================================
 department_curriculums = {
     "Projects": [
-        {"week": "Week 1 – 4", "title": "Project Lifecycle & Regulations", "deliv": "Regulatory Intelligence Summary", "status": "✓ Completed", "color": "#059669"},
-        {"week": "Week 5 – 8", "title": "FEED & Costing Models", "deliv": "Facility Manifold Cost Model", "status": "⏳ In Progress", "color": "#D97706"},
-        {"week": "Week 9 – 12", "title": "Primavera P6 Scheduling", "deliv": "Baseline Master Schedule", "status": "🔒 Not Started", "color": "#64748B"},
-        {"week": "Week 13 – 16", "title": "Site Inspections", "deliv": "Final Project Report", "status": "🔒 Not Started", "color": "#64748B"}
+        {"week": "Week 1 – 4", "title": "Project Lifecycle & Regulations", "deliv": "Regulatory Intelligence Summary", "status": "✓ Completed", "color": "#059669",
+         "subtopics": [{
+             "name": "NUPRC Regulatory Framework",
+             "notes": "The Nigerian Upstream Petroleum Regulatory Commission (NUPRC) is the primary regulatory body for upstream operations. Compliance requires strict adherence to EGASPIN (Environmental Guidelines) and the Petroleum Industry Act (PIA) of 2021, which dictates fiscal frameworks and host community development trusts.",
+             "quiz": [
+                 {"q": "What does NUPRC stand for?", "opts": ["Nigerian Upstream Petroleum Regulatory Commission", "National Union of Petroleum Refining", "Nigerian United Petroleum Resources"], "ans": "Nigerian Upstream Petroleum Regulatory Commission"},
+                 {"q": "Which act restructured the Nigerian oil and gas fiscal terms in 2021?", "opts": ["OPEC Act", "Petroleum Industry Act (PIA)", "EGASPIN Act"], "ans": "Petroleum Industry Act (PIA)"},
+                 {"q": "What does EGASPIN regulate?", "opts": ["Taxation", "Environmental Standards", "Pipeline scheduling"], "ans": "Environmental Standards"},
+                 {"q": "Which sector does NUPRC primarily oversee?", "opts": ["Downstream", "Midstream", "Upstream"], "ans": "Upstream"},
+                 {"q": "Under the PIA, what must be established for local areas?", "opts": ["Host Community Development Trusts", "Local Refineries", "Free Fuel Depots"], "ans": "Host Community Development Trusts"}
+             ],
+             "assignment": "Read the PIA 2021 summary document. Write a 2-page report on how the Host Community Development Trust impacts project OPEX budgeting."
+         }]},
+        {"week": "Week 5 – 8", "title": "FEED & Costing Models", "deliv": "Facility Manifold Cost Model", "status": "⏳ In Progress", "color": "#D97706",
+         "subtopics": [{
+             "name": "Front-End Engineering Design (FEED)",
+             "notes": "FEED comes after the conceptual design and feasibility study. It focuses on technical requirements, identifying project risks, and estimating rough investment costs (usually accurate to +/- 15%). Deliverables include P&IDs, equipment data sheets, and project execution plans.",
+             "quiz": [
+                 {"q": "When does FEED occur in a project lifecycle?", "opts": ["Before conceptual design", "After conceptual design", "During construction"], "ans": "After conceptual design"},
+                 {"q": "What is the typical cost estimate accuracy during FEED?", "opts": ["+/- 5%", "+/- 15%", "+/- 50%"], "ans": "+/- 15%"},
+                 {"q": "Which is a standard FEED deliverable?", "opts": ["As-built drawings", "Piping and Instrumentation Diagrams (P&IDs)", "Final decommissioning plan"], "ans": "Piping and Instrumentation Diagrams (P&IDs)"},
+                 {"q": "What is a primary goal of FEED?", "opts": ["Procure all materials", "Identify project risks", "Hire construction workers"], "ans": "Identify project risks"},
+                 {"q": "FEED stands for:", "opts": ["Front-End Engineering Design", "Field Environmental Engineering Data", "Final Execution Evaluation Document"], "ans": "Front-End Engineering Design"}
+             ],
+             "assignment": "Using the provided template, develop a Level 3 cost estimate for the installation of a 4-slot production manifold."
+         }]},
+        {"week": "Week 9 – 12", "title": "Primavera P6 Scheduling", "deliv": "Baseline Master Schedule", "status": "🔒 Not Started", "color": "#64748B",
+         "subtopics": [{
+             "name": "Critical Path Method (CPM)",
+             "notes": "The Critical Path Method identifies the longest stretch of dependent activities and measures the time required to complete them. In Primavera P6, activities on the critical path have zero 'Total Float'. Delaying these delays the entire project.",
+             "quiz": [
+                 {"q": "What does CPM stand for?", "opts": ["Cost Planning Model", "Critical Path Method", "Core Project Metrics"], "ans": "Critical Path Method"},
+                 {"q": "What is 'Total Float' on the critical path?", "opts": ["Zero", "10 days", "Infinite"], "ans": "Zero"},
+                 {"q": "Delaying an activity on the critical path will:", "opts": ["Save money", "Delay the project", "Have no effect"], "ans": "Delay the project"},
+                 {"q": "Which software is industry standard for oil & gas CPM?", "opts": ["MS Paint", "Primavera P6", "AutoCAD"], "ans": "Primavera P6"},
+                 {"q": "Activities dependent on the completion of others are called:", "opts": ["Predecessors", "Successors", "Floaters"], "ans": "Successors"}
+             ],
+             "assignment": "Create a 20-activity schedule in Primavera P6 (or MS Project) for a flowline replacement. Identify the critical path and submit the Gantt PDF."
+         }]},
+        {"week": "Week 13 – 16", "title": "Site Inspections", "deliv": "Final Project Report", "status": "🔒 Not Started", "color": "#64748B",
+         "subtopics": [{
+             "name": "Pre-Commissioning Audits",
+             "notes": "Pre-commissioning involves verifying that equipment installation complies with design data. Key steps include hydro-testing pipelines, loop checking instruments, and verifying P&ID line walks to ensure mechanical completion.",
+             "quiz": [
+                 {"q": "What test is commonly done on pipelines during pre-commissioning?", "opts": ["Hydro-testing", "Seismic testing", "Tensile testing"], "ans": "Hydro-testing"},
+                 {"q": "What is 'Line Walking'?", "opts": ["Checking pipe length", "Tracing physical lines against P&IDs", "Painting the pipes"], "ans": "Tracing physical lines against P&IDs"},
+                 {"q": "Pre-commissioning confirms what type of completion?", "opts": ["Financial", "Mechanical", "Decommissioning"], "ans": "Mechanical"},
+                 {"q": "Loop checking applies primarily to:", "opts": ["Structural beams", "Instrumentation and Control", "Valves"], "ans": "Instrumentation and Control"},
+                 {"q": "Who typically signs off on Mechanical Completion?", "opts": ["The CEO", "QA/QC and Project Engineers", "The HR Manager"], "ans": "QA/QC and Project Engineers"}
+             ],
+             "assignment": "Write a step-by-step pre-commissioning checklist for a newly installed centrifugal pump."
+         }]}
     ],
     "Subsurface": [
-        {"week": "Week 1 – 4", "title": "2D/3D Seismic Horizon Mapping", "deliv": "Seismic Horizon Report", "status": "✓ Completed", "color": "#059669"},
-        {"week": "Week 5 – 8", "title": "Petrophysical Log Evaluation", "deliv": "Net Pay & Water Saturation", "status": "⏳ In Progress", "color": "#D97706"},
-        {"week": "Week 9 – 12", "title": "Reservoir Material Balance", "deliv": "Reserves Estimation Analysis", "status": "🔒 Not Started", "color": "#64748B"},
-        {"week": "Week 13 – 16", "title": "Reservoir Simulation", "deliv": "Integrated Subsurface Model", "status": "🔒 Not Started", "color": "#64748B"}
+        {"week": "Week 1 – 4", "title": "2D/3D Seismic Horizon Mapping", "deliv": "Seismic Horizon Report", "status": "✓ Completed", "color": "#059669",
+         "subtopics": [{
+             "name": "Seismic Interpretation Basics",
+             "notes": "Seismic interpretation involves analyzing acoustic waves reflected from rock boundaries to map sub-surface structures. Horizons represent geological time boundaries. Faults appear as discontinuities in these horizons.",
+             "quiz": [
+                 {"q": "What do seismic waves reflect off of?", "opts": ["Ocean surface", "Rock boundaries / acoustic impedance changes", "Drill bits"], "ans": "Rock boundaries / acoustic impedance changes"},
+                 {"q": "What does a 'Horizon' represent?", "opts": ["Geological time boundary", "A type of well", "Surface elevation"], "ans": "Geological time boundary"},
+                 {"q": "How do faults typically appear in seismic data?", "opts": ["Continuous bright lines", "Discontinuities/breaks in horizons", "Perfect circles"], "ans": "Discontinuities/breaks in horizons"},
+                 {"q": "Which provides better spatial resolution?", "opts": ["2D Seismic", "3D Seismic", "Gravity survey"], "ans": "3D Seismic"},
+                 {"q": "What software is widely used for seismic interpretation?", "opts": ["Petrel", "Photoshop", "Primavera"], "ans": "Petrel"}
+             ],
+             "assignment": "Analyze the provided seismic cross-section. Map the primary horizon and identify at least two major fault lines."
+         }]},
+        {"week": "Week 5 – 8", "title": "Petrophysical Log Evaluation", "deliv": "Net Pay & Water Saturation", "status": "⏳ In Progress", "color": "#D97706",
+         "subtopics": [{
+             "name": "Wireline Logging",
+             "notes": "Logs measure physical properties of formations. Gamma Ray logs identify lithology (shale vs sand). Resistivity logs differentiate between hydrocarbons (high resistivity) and formation water (low resistivity).",
+             "quiz": [
+                 {"q": "What does a Gamma Ray log primarily identify?", "opts": ["Temperature", "Lithology (shale vs sand)", "Pressure"], "ans": "Lithology (shale vs sand)"},
+                 {"q": "High resistivity in a porous sandstone usually indicates:", "opts": ["Water", "Hydrocarbons", "Shale"], "ans": "Hydrocarbons"},
+                 {"q": "Low resistivity usually indicates the presence of:", "opts": ["Oil", "Gas", "Formation Water"], "ans": "Formation Water"},
+                 {"q": "What calculates formation porosity?", "opts": ["Density/Neutron logs", "Caliper log", "Mud log"], "ans": "Density/Neutron logs"},
+                 {"q": "The Archie equation is used to calculate:", "opts": ["Drilling speed", "Water Saturation (Sw)", "Seismic velocity"], "ans": "Water Saturation (Sw)"}
+             ],
+             "assignment": "Use the provided well log data (Gamma Ray and Resistivity) to calculate the Net-to-Gross ratio of the reservoir interval."
+         }]},
+        {"week": "Week 9 – 12", "title": "Reservoir Material Balance", "deliv": "Reserves Estimation Analysis", "status": "🔒 Not Started", "color": "#64748B",
+         "subtopics": [{
+             "name": "Drive Mechanisms",
+             "notes": "Reservoir drive mechanisms dictate how oil is pushed to the surface. Common types include Water Drive (aquifer expansion), Solution Gas Drive (gas bubbling out of oil), and Gas Cap Drive (expanding gas cap).",
+             "quiz": [
+                 {"q": "Which drive mechanism maintains reservoir pressure best?", "opts": ["Solution Gas Drive", "Active Water Drive", "Compaction Drive"], "ans": "Active Water Drive"},
+                 {"q": "What drives oil in a Solution Gas Drive?", "opts": ["Water below the oil", "Gas expanding out of the oil phase", "Gravity"], "ans": "Gas expanding out of the oil phase"},
+                 {"q": "A rapidly expanding gas cap above the oil zone is a:", "opts": ["Water drive", "Gas Cap Drive", "Artificial lift"], "ans": "Gas Cap Drive"},
+                 {"q": "What does MBAL software primarily do?", "opts": ["Material Balance calculations", "Seismic mapping", "Drilling design"], "ans": "Material Balance calculations"},
+                 {"q": "What happens to pressure in a closed depletion drive?", "opts": ["Remains constant", "Drops rapidly", "Increases"], "ans": "Drops rapidly"}
+             ],
+             "assignment": "Write a brief report comparing the expected recovery factors of a Water Drive reservoir vs. a Solution Gas Drive reservoir."
+         }]},
+        {"week": "Week 13 – 16", "title": "Reservoir Simulation", "deliv": "Integrated Subsurface Model", "status": "🔒 Not Started", "color": "#64748B",
+         "subtopics": [{
+             "name": "Dynamic Modeling",
+             "notes": "Dynamic models simulate fluid flow over time using grid blocks. It combines static geological properties (porosity/permeability) with PVT fluid data and relative permeability curves to predict future production.",
+             "quiz": [
+                 {"q": "What does a dynamic model simulate?", "opts": ["Static rock volume", "Fluid flow over time", "Drilling rig structure"], "ans": "Fluid flow over time"},
+                 {"q": "What fluid data is required for simulation?", "opts": ["PVT (Pressure-Volume-Temperature) data", "Water chemistry only", "Drilling mud weight"], "ans": "PVT (Pressure-Volume-Temperature) data"},
+                 {"q": "Eclipse and tNavigator are software for:", "opts": ["Reservoir Simulation", "Accounting", "HR Management"], "ans": "Reservoir Simulation"},
+                 {"q": "What dictates how two fluids flow together in pores?", "opts": ["Absolute permeability", "Relative permeability curves", "Porosity"], "ans": "Relative permeability curves"},
+                 {"q": "History matching involves:", "opts": ["Matching simulation output to historical production data", "Matching logs to seismic", "Reading old company reports"], "ans": "Matching simulation output to historical production data"}
+             ],
+             "assignment": "Review the provided Eclipse history matching plot. Identify periods of mismatch and suggest two parameters you could adjust to fix it."
+         }]}
     ],
     "ICT": [
-        {"week": "Week 1 – 4", "title": "Network & Cybersecurity", "deliv": "Network Topology Audit", "status": "✓ Completed", "color": "#059669"},
-        {"week": "Week 5 – 8", "title": "Enterprise Database Admin", "deliv": "Database Security Audit", "status": "⏳ In Progress", "color": "#D97706"},
-        {"week": "Week 9 – 12", "title": "Software Engineering & ITIL", "deliv": "Service Desk Automation", "status": "🔒 Not Started", "color": "#64748B"},
-        {"week": "Week 13 – 16", "title": "Cloud Infrastructure", "deliv": "Cloud System Deployment", "status": "🔒 Not Started", "color": "#64748B"}
+        {"week": "Week 1 – 4", "title": "Network & Cybersecurity", "deliv": "Network Topology Audit", "status": "✓ Completed", "color": "#059669",
+         "subtopics": [{
+             "name": "Firewall & VLAN Configurations",
+             "notes": "VLANs (Virtual Local Area Networks) segment network traffic for security and performance. Firewalls control incoming/outgoing traffic based on rules. NNPC uses strict IT/OT separation to protect field operational tech from corporate networks.",
+             "quiz": [
+                 {"q": "What is the purpose of a VLAN?", "opts": ["To increase internet speed", "To segment network traffic", "To replace cables"], "ans": "To segment network traffic"},
+                 {"q": "What device enforces traffic rules between networks?", "opts": ["Switch", "Firewall", "Hub"], "ans": "Firewall"},
+                 {"q": "What does IT/OT separation protect?", "opts": ["Corporate emails", "Operational Technology (like field PLCs)", "Printer networks"], "ans": "Operational Technology (like field PLCs)"},
+                 {"q": "A DMZ in networking stands for:", "opts": ["Demilitarized Zone", "Data Management Zone", "Direct MAC Zone"], "ans": "Demilitarized Zone"},
+                 {"q": "Which port is standard for HTTPS?", "opts": ["80", "443", "22"], "ans": "443"}
+             ],
+             "assignment": "Draw a basic network topology diagram showing an IT corporate network separated from an OT field network by a firewall."
+         }]},
+        {"week": "Week 5 – 8", "title": "Enterprise Database Admin", "deliv": "Database Security Audit", "status": "⏳ In Progress", "color": "#D97706",
+         "subtopics": [{
+             "name": "SQL & Access Controls",
+             "notes": "Database administration ensures data integrity and availability. Role-Based Access Control (RBAC) ensures users only access data necessary for their jobs. SQL commands like GRANT and REVOKE manage these permissions.",
+             "quiz": [
+                 {"q": "What does RBAC stand for?", "opts": ["Role-Based Access Control", "Rule-Based Action Center", "Remote Backup And Control"], "ans": "Role-Based Access Control"},
+                 {"q": "Which SQL command gives user permissions?", "opts": ["GIVE", "GRANT", "ALLOW"], "ans": "GRANT"},
+                 {"q": "Which SQL command removes permissions?", "opts": ["DELETE", "DROP", "REVOKE"], "ans": "REVOKE"},
+                 {"q": "CIA triad in security stands for:", "opts": ["Confidentiality, Integrity, Availability", "Central, Internal, Authorized", "Cost, IT, Administration"], "ans": "Confidentiality, Integrity, Availability"},
+                 {"q": "A primary key in a database must be:", "opts": ["A number", "Unique and not null", "Shared across tables"], "ans": "Unique and not null"}
+             ],
+             "assignment": "Write a SQL script that creates a 'ProductionData' table and GRANTS read-only access to a 'JuniorEngineer' role."
+         }]},
+        {"week": "Week 9 – 12", "title": "Software Engineering & ITIL", "deliv": "Service Desk Automation", "status": "🔒 Not Started", "color": "#64748B",
+         "subtopics": [{
+             "name": "ITIL Incident Management",
+             "notes": "ITIL is a framework for IT service management. Incident management aims to restore normal service operation as quickly as possible. SLAs (Service Level Agreements) define the acceptable resolution time based on ticket priority.",
+             "quiz": [
+                 {"q": "What is the goal of Incident Management?", "opts": ["Find who caused the error", "Restore service quickly", "Buy new hardware"], "ans": "Restore service quickly"},
+                 {"q": "What does SLA stand for?", "opts": ["Software Licensing Agreement", "Service Level Agreement", "System Log Analysis"], "ans": "Service Level Agreement"},
+                 {"q": "An incident that affects the entire organization is a:", "opts": ["P4 / Low Priority", "P1 / Major Incident", "Change Request"], "ans": "P1 / Major Incident"},
+                 {"q": "ITIL focuses on aligning IT services with:", "opts": ["Coding standards", "Business needs", "Hardware specs"], "ans": "Business needs"},
+                 {"q": "A workaround is used to:", "opts": ["Permanently fix a bug", "Temporarily restore service", "Bypass security"], "ans": "Temporarily restore service"}
+             ],
+             "assignment": "Draft an automated email response template for a P1 Major Incident regarding an Enterprise ERP server crash."
+         }]},
+        {"week": "Week 13 – 16", "title": "Cloud Infrastructure", "deliv": "Cloud System Deployment", "status": "🔒 Not Started", "color": "#64748B",
+         "subtopics": [{
+             "name": "Cloud Deployment Models",
+             "notes": "Cloud computing offers IaaS, PaaS, and SaaS. A Public Cloud is shared infrastructure (AWS, Azure). A Private Cloud is dedicated to one organization. A Hybrid cloud combines both, often used in Oil & Gas for data sovereignty.",
+             "quiz": [
+                 {"q": "What does SaaS stand for?", "opts": ["Software as a Service", "Storage as a System", "Security and System"], "ans": "Software as a Service"},
+                 {"q": "AWS and Azure are examples of:", "opts": ["Private Clouds", "Public Clouds", "Local Servers"], "ans": "Public Clouds"},
+                 {"q": "A mix of public and private cloud is called:", "opts": ["Mixed Cloud", "Hybrid Cloud", "Multi-Cloud"], "ans": "Hybrid Cloud"},
+                 {"q": "IaaS provides:", "opts": ["Fully managed apps", "Virtual machines and storage", "Development frameworks"], "ans": "Virtual machines and storage"},
+                 {"q": "Why do Oil & Gas companies use Hybrid clouds?", "opts": ["It is cheapest", "For Data Sovereignty and security of core assets", "To get free software"], "ans": "For Data Sovereignty and security of core assets"}
+             ],
+             "assignment": "Write a 1-page proposal evaluating whether the department should migrate legacy applications to a Public Cloud vs a Private Cloud."
+         }]}
     ],
     "Facility": [
-        {"week": "Week 1 – 4", "title": "HVAC & Power Systems", "deliv": "Maintenance Log & Safety Check", "status": "✓ Completed", "color": "#059669"},
-        {"week": "Week 5 – 8", "title": "HSE & Emergency Protocols", "deliv": "Hazard Identification Assessment", "status": "⏳ In Progress", "color": "#D97706"},
-        {"week": "Week 9 – 12", "title": "Asset Integrity Mgmt", "deliv": "Preventive Maintenance Schedule", "status": "🔒 Not Started", "color": "#64748B"},
-        {"week": "Week 13 – 16", "title": "Energy Efficiency & Auditing", "deliv": "Energy Optimization Strategy", "status": "🔒 Not Started", "color": "#64748B"}
+        {"week": "Week 1 – 4", "title": "HVAC & Power Systems", "deliv": "Maintenance Log & Safety Check", "status": "✓ Completed", "color": "#059669",
+         "subtopics": [{
+             "name": "Uninterruptible Power Supply (UPS)",
+             "notes": "Facility power stability is critical. UPS systems provide emergency power to loads when the input power source fails, preventing data loss in server rooms and keeping critical control systems online until generators start.",
+             "quiz": [
+                 {"q": "What does UPS stand for?", "opts": ["Universal Power Source", "Uninterruptible Power Supply", "Unified Phase System"], "ans": "Uninterruptible Power Supply"},
+                 {"q": "What is the primary function of a UPS?", "opts": ["Generate power permanently", "Bridge power gap until generators start", "Cool down servers"], "ans": "Bridge power gap until generators start"},
+                 {"q": "What type of batteries are commonly used in industrial UPS?", "opts": ["AA Alkaline", "VRLA (Lead-Acid) or Lithium-ion", "Silver oxide"], "ans": "VRLA (Lead-Acid) or Lithium-ion"},
+                 {"q": "A UPS prevents what during a blackout?", "opts": ["Data loss and control system failure", "Water leaks", "Fire"], "ans": "Data loss and control system failure"},
+                 {"q": "What does an Inverter do in a UPS?", "opts": ["Converts AC to DC", "Converts DC to AC", "Stores energy"], "ans": "Converts DC to AC"}
+             ],
+             "assignment": "Perform a theoretical load calculation for a server room. Determine the kVA rating required for a UPS to sustain a 15kW load for 30 minutes."
+         }]},
+        {"week": "Week 5 – 8", "title": "HSE & Emergency Protocols", "deliv": "Hazard Identification Assessment", "status": "⏳ In Progress", "color": "#D97706",
+         "subtopics": [{
+             "name": "Permit To Work (PTW) Systems",
+             "notes": "PTW is a formal written system used to control certain types of potentially hazardous work. Hot Work permits are for tasks that generate heat/sparks (welding). Cold Work is for non-sparking tasks.",
+             "quiz": [
+                 {"q": "What does PTW stand for?", "opts": ["Permit To Work", "Plan The Work", "Pre-Task Warning"], "ans": "Permit To Work"},
+                 {"q": "Welding requires what kind of permit?", "opts": ["Cold Work", "Hot Work", "Confined Space"], "ans": "Hot Work"},
+                 {"q": "Who issues a PTW?", "opts": ["Any worker", "The Authorized Facility Manager / Supervisor", "HR"], "ans": "The Authorized Facility Manager / Supervisor"},
+                 {"q": "What must be done before issuing a Confined Space permit?", "opts": ["Gas testing", "Painting", "Water flooding"], "ans": "Gas testing"},
+                 {"q": "LOTO stands for:", "opts": ["Lock Out, Tag Out", "Leave Open, Turn Off", "Log Of Task Operations"], "ans": "Lock Out, Tag Out"}
+             ],
+             "assignment": "Fill out a sample Job Hazard Analysis (JHA) and Hot Work Permit template for welding a broken pipe bracket in the utility room."
+         }]},
+        {"week": "Week 9 – 12", "title": "Asset Integrity Mgmt", "deliv": "Preventive Maintenance Schedule", "status": "🔒 Not Started", "color": "#64748B",
+         "subtopics": [{
+             "name": "Preventive vs Corrective Maintenance",
+             "notes": "Corrective maintenance fixes things after they break (run-to-failure). Preventive Maintenance (PM) performs regular checks to prevent failures. Predictive maintenance uses sensors (vibration, temp) to predict failures before they happen.",
+             "quiz": [
+                 {"q": "Fixing a pump only after it stops working is:", "opts": ["Preventive", "Predictive", "Corrective / Reactive"], "ans": "Corrective / Reactive"},
+                 {"q": "Changing oil every 3 months is an example of:", "opts": ["Preventive Maintenance", "Corrective Maintenance", "Design change"], "ans": "Preventive Maintenance"},
+                 {"q": "Using vibration sensors to alert for bearing wear is:", "opts": ["Predictive Maintenance", "Corrective Maintenance", "Reactive Maintenance"], "ans": "Predictive Maintenance"},
+                 {"q": "CMMS stands for:", "opts": ["Computerized Maintenance Management System", "Central Mechanical Monitor System", "Core Material Management Software"], "ans": "Computerized Maintenance Management System"},
+                 {"q": "High MTBF (Mean Time Between Failures) indicates:", "opts": ["Poor reliability", "High reliability", "High cost"], "ans": "High reliability"}
+             ],
+             "assignment": "Create a 6-month Preventive Maintenance schedule in Excel for an industrial HVAC Chiller unit."
+         }]},
+        {"week": "Week 13 – 16", "title": "Energy Efficiency & Auditing", "deliv": "Energy Optimization Strategy", "status": "🔒 Not Started", "color": "#64748B",
+         "subtopics": [{
+             "name": "Lighting and HVAC Optimization",
+             "notes": "Energy audits identify waste. Replacing fluorescent lights with LEDs reduces lighting load. Installing Variable Frequency Drives (VFDs) on HVAC fan motors allows them to slow down when full cooling isn't needed, saving massive amounts of power.",
+             "quiz": [
+                 {"q": "What does a VFD do?", "opts": ["Creates cooling gas", "Varies the speed of an electric motor", "Measures water pressure"], "ans": "Varies the speed of an electric motor"},
+                 {"q": "Which lighting technology is most energy-efficient?", "opts": ["Incandescent", "Fluorescent", "LED"], "ans": "LED"},
+                 {"q": "HVAC stands for:", "opts": ["Heating, Ventilation, and Air Conditioning", "High Voltage Alternating Current", "Heavy Volume Air Compressor"], "ans": "Heating, Ventilation, and Air Conditioning"},
+                 {"q": "Reducing energy waste directly impacts:", "opts": ["CAPEX", "OPEX (Operating Expenses)", "Taxes"], "ans": "OPEX (Operating Expenses)"},
+                 {"q": "An energy audit measures:", "opts": ["Employee attendance", "Energy consumption and waste points", "Oil flow rate"], "ans": "Energy consumption and waste points"}
+             ],
+             "assignment": "Write a proposal to management calculating the ROI of replacing 500 fluorescent tubes with LED panels in the main office."
+         }]}
     ],
     "Legal": [
-        {"week": "Week 1 – 4", "title": "PIA Framework", "deliv": "PIA Impact Analysis Memo", "status": "✓ Completed", "color": "#059669"},
-        {"week": "Week 5 – 8", "title": "Joint Venture Contracts", "deliv": "JV Legal Contract Brief", "status": "⏳ In Progress", "color": "#D97706"},
-        {"week": "Week 9 – 12", "title": "Corporate Governance", "deliv": "Arbitration & Legal Case Study", "status": "🔒 Not Started", "color": "#64748B"},
-        {"week": "Week 13 – 16", "title": "Environmental Energy Law", "deliv": "Compliance Checklist", "status": "🔒 Not Started", "color": "#64748B"}
+        {"week": "Week 1 – 4", "title": "PIA Framework", "deliv": "PIA Impact Analysis Memo", "status": "✓ Completed", "color": "#059669",
+         "subtopics": [{
+             "name": "Petroleum Industry Act 2021 Overview",
+             "notes": "The PIA overhauled Nigeria's oil and gas legal framework. It established two main regulators: NUPRC (Upstream) and NMDPRA (Midstream/Downstream). It transitioned NNPC from a corporation to a limited liability company (NNPC Ltd).",
+             "quiz": [
+                 {"q": "Under the PIA, NNPC became a:", "opts": ["Government Ministry", "Limited Liability Company (NNPC Ltd)", "Foreign Entity"], "ans": "Limited Liability Company (NNPC Ltd)"},
+                 {"q": "Which agency regulates the Upstream sector under PIA?", "opts": ["DPR", "NUPRC", "NMDPRA"], "ans": "NUPRC"},
+                 {"q": "Which agency regulates Midstream/Downstream?", "opts": ["NUPRC", "NMDPRA", "CBN"], "ans": "NMDPRA"},
+                 {"q": "The PIA mandates the creation of funds for:", "opts": ["Host Communities", "Space Exploration", "Elections"], "ans": "Host Communities"},
+                 {"q": "When was the PIA signed into law?", "opts": ["1999", "2015", "2021"], "ans": "2021"}
+             ],
+             "assignment": "Draft a legal memo summarizing the shift of regulatory powers from the old DPR to the new NUPRC and NMDPRA."
+         }]},
+        {"week": "Week 5 – 8", "title": "Joint Venture Contracts", "deliv": "JV Legal Contract Brief", "status": "⏳ In Progress", "color": "#D97706",
+         "subtopics": [{
+             "name": "Production Sharing Contracts (PSC) vs JV",
+             "notes": "In a Joint Venture (JV), partners share exploration costs and oil produced based on equity stakes. In a Production Sharing Contract (PSC), the IOC bears the exploration cost/risk; if oil is found, they recover costs ('Cost Oil') and share the remaining ('Profit Oil') with the state.",
+             "quiz": [
+                 {"q": "Who bears the exploration financial risk in a PSC?", "opts": ["The State", "The International Oil Company (IOC)", "The Host Community"], "ans": "The International Oil Company (IOC)"},
+                 {"q": "Oil used to pay back the IOC's expenses in a PSC is called:", "opts": ["Profit Oil", "Tax Oil", "Cost Oil"], "ans": "Cost Oil"},
+                 {"q": "In a JV, how are costs shared?", "opts": ["IOC pays all", "Based on equity percentage", "Government pays all"], "ans": "Based on equity percentage"},
+                 {"q": "What does JOA stand for in Joint Ventures?", "opts": ["Joint Operating Agreement", "Judicial Order of Action", "Joint Oil Allocation"], "ans": "Joint Operating Agreement"},
+                 {"q": "Who is usually the non-operating partner in a Nigerian JV?", "opts": ["Shell", "Chevron", "NNPC"], "ans": "NNPC"}
+             ],
+             "assignment": "Compare the financial risks for NNPC under a standard JV agreement versus a PSC deepwater agreement."
+         }]},
+        {"week": "Week 9 – 12", "title": "Corporate Governance", "deliv": "Arbitration & Legal Case Study", "status": "🔒 Not Started", "color": "#64748B",
+         "subtopics": [{
+             "name": "Dispute Resolution & Arbitration",
+             "notes": "Oil and Gas disputes avoid local courts when possible to ensure neutrality and speed. Arbitration is a binding process where an independent arbitrator rules on the dispute. Clauses for arbitration locations (e.g., London, Paris) are baked into JOAs.",
+             "quiz": [
+                 {"q": "Why is arbitration preferred over local litigation?", "opts": ["It is cheaper", "Neutrality, confidentiality, and speed", "Local courts do not exist"], "ans": "Neutrality, confidentiality, and speed"},
+                 {"q": "Is an arbitral award legally binding?", "opts": ["Yes", "No", "Only if the government agrees"], "ans": "Yes"},
+                 {"q": "Where are dispute resolution procedures defined?", "opts": ["In the daily news", "In the contract/JOA clauses", "By the UN"], "ans": "In the contract/JOA clauses"},
+                 {"q": "Mediation differs from arbitration because mediation is:", "opts": ["Non-binding", "Binding", "More expensive"], "ans": "Non-binding"},
+                 {"q": "A force majeure clause relieves liability for:", "opts": ["Poor financial planning", "Unforeseeable, unavoidable events (e.g., acts of God)", "Employee strikes"], "ans": "Unforeseeable, unavoidable events (e.g., acts of God)"}
+             ],
+             "assignment": "Review the provided Force Majeure case study. Write a legal opinion on whether a drop in global oil prices qualifies as a Force Majeure event."
+         }]},
+        {"week": "Week 13 – 16", "title": "Environmental Energy Law", "deliv": "Compliance Checklist", "status": "🔒 Not Started", "color": "#64748B",
+         "subtopics": [{
+             "name": "Gas Flaring Regulations",
+             "notes": "Nigeria has stringent laws against routine gas flaring to reduce carbon emissions. The Nigerian Gas Flare Commercialization Programme (NGFCP) aims to eliminate flaring by charging heavy penalties and offering flare sites to third-party investors for commercialization.",
+             "quiz": [
+                 {"q": "What is the primary purpose of the NGFCP?", "opts": ["Increase gas flaring", "Eliminate routine gas flaring via commercialization", "Export crude oil"], "ans": "Eliminate routine gas flaring via commercialization"},
+                 {"q": "What is the penalty for routine flaring?", "opts": ["Warning letters", "Fines per thousand standard cubic feet flared", "No penalty"], "ans": "Fines per thousand standard cubic feet flared"},
+                 {"q": "Which environmental guideline governs oil spills?", "opts": ["EGASPIN", "PIA", "Constitution"], "ans": "EGASPIN"},
+                 {"q": "Flared gas is primarily composed of:", "opts": ["Oxygen", "Methane", "Nitrogen"], "ans": "Methane"},
+                 {"q": "Environmental Impact Assessments (EIA) must be done:", "opts": ["Before project approval", "After project completion", "During decommissioning"], "ans": "Before project approval"}
+             ],
+             "assignment": "Draft a legal compliance checklist for a flowstation manager outlining the penalties and reporting requirements for gas flaring."
+         }]}
     ],
     "Finance": [
-        {"week": "Week 1 – 4", "title": "Oil & Gas Cost Accounting", "deliv": "Cost Allocation Audit Report", "status": "✓ Completed", "color": "#059669"},
-        {"week": "Week 5 – 8", "title": "JV Cash Calls & Billing", "deliv": "Cash Call Reconciliation Sheet", "status": "⏳ In Progress", "color": "#D97706"},
-        {"week": "Week 9 – 12", "title": "CAPEX & OPEX Budgeting", "deliv": "Quarterly Budget Forecast Model", "status": "🔒 Not Started", "color": "#64748B"},
-        {"week": "Week 13 – 16", "title": "Tax Compliance & Audit", "deliv": "Tax Compliance Summary", "status": "🔒 Not Started", "color": "#64748B"}
+        {"week": "Week 1 – 4", "title": "Oil & Gas Cost Accounting", "deliv": "Cost Allocation Audit Report", "status": "✓ Completed", "color": "#059669",
+         "subtopics": [{
+             "name": "Successful Efforts vs Full Cost",
+             "notes": "Two main accounting methods for exploration. 'Successful Efforts' capitalizes only the costs of successful wells; dry holes are expensed immediately. 'Full Cost' capitalizes all exploration costs (both successful and dry holes) into the asset pool.",
+             "quiz": [
+                 {"q": "Which method expenses dry holes immediately?", "opts": ["Full Cost", "Successful Efforts", "Depreciation"], "ans": "Successful Efforts"},
+                 {"q": "Which method capitalizes all exploration costs?", "opts": ["Successful Efforts", "Full Cost", "Amortization"], "ans": "Full Cost"},
+                 {"q": "Capitalizing a cost means putting it on the:", "opts": ["Income Statement", "Balance Sheet", "Cash Flow Statement"], "ans": "Balance Sheet"},
+                 {"q": "Expensing a cost immediately lowers:", "opts": ["Current year profit", "Future depreciation", "Liabilities"], "ans": "Current year profit"},
+                 {"q": "DD&A in oil accounting stands for:", "opts": ["Drilling, Design & Analysis", "Depreciation, Depletion & Amortization", "Direct Debt & Assets"], "ans": "Depreciation, Depletion & Amortization"}
+             ],
+             "assignment": "Given a dataset of 3 drilled wells (2 dry, 1 successful), calculate the total capitalized cost using both the Successful Efforts and Full Cost methods."
+         }]},
+        {"week": "Week 5 – 8", "title": "JV Cash Calls & Billing", "deliv": "Cash Call Reconciliation Sheet", "status": "⏳ In Progress", "color": "#D97706",
+         "subtopics": [{
+             "name": "Cash Call Operations",
+             "notes": "A Cash Call is a request for payment issued by the Joint Venture operator to non-operating partners. It funds upcoming approved OPEX and CAPEX. Failure to pay cash calls results in default, affecting the partner's equity lifting rights.",
+             "quiz": [
+                 {"q": "Who issues the Cash Call?", "opts": ["The Operator", "The Non-Operator", "The Bank"], "ans": "The Operator"},
+                 {"q": "What does a Cash Call fund?", "opts": ["Dividends", "Approved JV OPEX and CAPEX operations", "Employee bonuses"], "ans": "Approved JV OPEX and CAPEX operations"},
+                 {"q": "What happens if a partner fails to pay a cash call?", "opts": ["They get a discount", "They enter default status", "Nothing"], "ans": "They enter default status"},
+                 {"q": "Joint Interest Billing (JIB) is used to:", "opts": ["Bill the government", "Invoice partners for their share of costs", "Sell oil"], "ans": "Invoice partners for their share of costs"},
+                 {"q": "Cash calls are usually based on:", "opts": ["Random estimates", "Approved Work Program and Budget (WP&B)", "Past year profits"], "ans": "Approved Work Program and Budget (WP&B)"}
+             ],
+             "assignment": "Review a simulated Joint Interest Billing statement and reconcile the Operator's cash call request against the approved quarterly budget."
+         }]},
+        {"week": "Week 9 – 12", "title": "CAPEX & OPEX Budgeting", "deliv": "Quarterly Budget Forecast Model", "status": "🔒 Not Started", "color": "#64748B",
+         "subtopics": [{
+             "name": "Capital vs Operating Expenditure",
+             "notes": "CAPEX refers to money spent acquiring or upgrading physical assets (e.g., building a rig). OPEX refers to day-to-day operational costs (e.g., maintenance, salaries, chemicals). CAPEX is depreciated over time; OPEX is deducted in the current tax year.",
+             "quiz": [
+                 {"q": "Building a new flowstation is classed as:", "opts": ["OPEX", "CAPEX", "Revenue"], "ans": "CAPEX"},
+                 {"q": "Paying monthly salaries to rig workers is:", "opts": ["CAPEX", "OPEX", "Equity"], "ans": "OPEX"},
+                 {"q": "Which expenditure is depreciated over the life of the asset?", "opts": ["CAPEX", "OPEX", "Dividends"], "ans": "CAPEX"},
+                 {"q": "Routine pump maintenance falls under:", "opts": ["CAPEX", "OPEX", "Capital gains"], "ans": "OPEX"},
+                 {"q": "Purchasing a new offshore drilling vessel is:", "opts": ["OPEX", "CAPEX", "Overhead"], "ans": "CAPEX"}
+             ],
+             "assignment": "Categorize a provided list of 20 expense items into CAPEX and OPEX, and calculate the total projected OPEX budget for the quarter."
+         }]},
+        {"week": "Week 13 – 16", "title": "Tax Compliance & Audit", "deliv": "Tax Compliance Summary", "status": "🔒 Not Started", "color": "#64748B",
+         "subtopics": [{
+             "name": "Hydrocarbon Tax & Royalty",
+             "notes": "Under the PIA, taxation changed from PPT (Petroleum Profits Tax) to a dual system: Hydrocarbon Tax (HT) and Company Income Tax (CIT). Royalties are paid to the government based on production volume and price, acting as a direct cost before profit calculations.",
+             "quiz": [
+                 {"q": "What tax replaced PPT for upstream operations under the PIA?", "opts": ["Value Added Tax", "Hydrocarbon Tax (HT)", "Sales Tax"], "ans": "Hydrocarbon Tax (HT)"},
+                 {"q": "Royalties are calculated based on:", "opts": ["Net profit", "Production volume and price", "Employee count"], "ans": "Production volume and price"},
+                 {"q": "Are royalties paid before or after calculating taxable profit?", "opts": ["Before (it is a deductible expense)", "After", "At the same time"], "ans": "Before (it is a deductible expense)"},
+                 {"q": "What does CIT stand for?", "opts": ["Company Income Tax", "Corporate Investment Tariff", "Cash In Transit"], "ans": "Company Income Tax"},
+                 {"q": "Who collects royalties in Nigeria?", "opts": ["CBN", "NUPRC", "Commercial Banks"], "ans": "NUPRC"}
+             ],
+             "assignment": "Using the provided daily production data and global crude price, calculate the monthly Royalty payment owed to the NUPRC."
+         }]}
     ]
 }
 
@@ -519,22 +811,54 @@ else:
                 </div>
             """, unsafe_allow_html=True)
 
-    # --- CURRICULUM PAGE ---
+    # --- INTERACTIVE CURRICULUM PAGE ---
     elif selected_nav == "Curriculum":
         current_dept = st.session_state['department']
-        st.subheader(f"📖 16-Week Detailed Curriculum — {current_dept} Department")
-        
-        active_curr = department_curriculums.get(current_dept, department_curriculums["Projects"])
-        
-        for item in active_curr:
-            st.markdown(f"""
-                <div class="card-white" style="border-left: 5px solid #006837 !important;">
-                    <span style="font-size: 0.8rem; color: #006837 !important; font-weight: bold;">{item['week']}</span>
-                    <h3 style="margin: 4px 0 8px 0; color: #0F172A !important;">{item['title']}</h3>
-                    <p style="font-size: 0.88rem; color: #475569 !important;"><b>Key Deliverable:</b> {item['deliv']}</p>
-                    <span style="background: #F1F5F9; color: {item['color']} !important; padding: 4px 10px; border-radius: 6px; font-weight: bold; font-size: 0.8rem;">Status: {item['status']}</span>
-                </div>
-            """, unsafe_allow_html=True)
+        st.subheader(f"📖 Interactive Learning Module — {current_dept} Department")
+
+        active_curr = department_curriculums.get(current_dept, [])
+
+        for phase_idx, phase in enumerate(active_curr):
+            with st.expander(f"📍 {phase['week']}: {phase['title']} ({phase['status']})"):
+                st.markdown(f"**Main Weekly Deliverable:** `{phase['deliv']}`")
+                st.markdown("---")
+
+                if "subtopics" in phase:
+                    for sub_idx, sub in enumerate(phase["subtopics"]):
+                        st.markdown(f"<h4 style='color: #006837 !important;'>🔹 Subtopic: {sub['name']}</h4>", unsafe_allow_html=True)
+
+                        tab1, tab2, tab3 = st.tabs(["📝 Lecture Notes", "🧠 Knowledge Check Quiz", "📋 Assignment"])
+
+                        with tab1:
+                            st.info(f"**Study Notes:**\n\n{sub['notes']}")
+
+                        with tab2:
+                            st.markdown("#### 🎯 5-Question Quiz")
+                            with st.form(key=f"quiz_form_{phase_idx}_{sub_idx}"):
+                                user_answers = []
+                                for q_idx, q_data in enumerate(sub["quiz"]):
+                                    st.write(f"**Q{q_idx+1}:** {q_data['q']}")
+                                    ans = st.radio("Select:", q_data["opts"], key=f"q_{phase_idx}_{sub_idx}_{q_idx}", label_visibility="collapsed")
+                                    user_answers.append((ans, q_data["ans"]))
+                                    st.write("")
+
+                                submitted = st.form_submit_button("Submit Quiz")
+                                if submitted:
+                                    score = sum([1 for user_ans, correct_ans in user_answers if user_ans == correct_ans])
+                                    if score == 5:
+                                        st.success(f"🎉 Perfect Score! {score}/5")
+                                        st.balloons()
+                                    elif score >= 3:
+                                        st.warning(f"👍 Good job! You scored {score}/5.")
+                                    else:
+                                        st.error(f"📉 You scored {score}/5. Please review the notes and try again.")
+
+                        with tab3:
+                            st.warning(f"**Task Instructions:**\n\n{sub['assignment']}")
+                            if st.button("📤 Upload Completed Assignment", key=f"btn_{phase_idx}_{sub_idx}"):
+                                st.success("Navigate to the **Deliverables** tab to upload your file!")
+                else:
+                    st.info("Module content is currently being updated by the supervisor.")
 
     # --- MASTER SCHEDULE PAGE ---
     elif selected_nav == "Master Schedule":
