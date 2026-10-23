@@ -565,7 +565,7 @@ if not st.session_state["logged_in"]:
                     if create_user(new_uname, new_pass, new_role, new_dept, new_email):
                         st.success("Account created successfully! Please log in.")
                     else:
-                        st.error("Username already exists bitch.")
+                        st.error("Username already exists.")
 else:
     # ==========================================
     # 7. SIDEBAR NAVIGATION
@@ -1066,7 +1066,7 @@ else:
             st.subheader("📊 Analytics & Weekly Performance Reports")
             rep_df = pd.DataFrame({
                 "Department": ["Projects", "Subsurface", "ICT", "Facility", "Legal", "Finance"],
-                "Avg Completion (%)": [75, 80, 70, 85, 65, 90]
+                "Avg Completion (%)": [39, 72, 20, 85, 45, 65]
             })
             fig_rep = px.bar(rep_df, x="Department", y="Avg Completion (%)", color="Department", color_discrete_sequence=["#006837", "#FFD100", "#00A859", "#00381C", "#0B6623", "#2563EB"])
             fig_rep.update_layout(template="plotly_white", paper_bgcolor='#FFFFFF', plot_bgcolor='#F8FAFC', font=dict(color='#0F172A'), height=350)
