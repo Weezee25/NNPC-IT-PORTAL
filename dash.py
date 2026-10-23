@@ -565,7 +565,7 @@ if not st.session_state["logged_in"]:
                     if create_user(new_uname, new_pass, new_role, new_dept, new_email):
                         st.success("Account created successfully! Please log in.")
                     else:
-                        st.error("Username already exists.")
+                        st.error("Username already exists bitch.")
 else:
     # ==========================================
     # 7. SIDEBAR NAVIGATION
