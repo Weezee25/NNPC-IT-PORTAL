@@ -19,7 +19,7 @@ from reportlab.lib import colors
 # ==========================================
 st.set_page_config(
     page_title="NNPC Internship Portal Dashboard",
-    page_icon="🇳🇬",
+    page_icon="NNNPC",
     layout="wide",
     initial_sidebar_state="expanded"
 )
