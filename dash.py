@@ -19,7 +19,7 @@ from reportlab.lib import colors
 # ==========================================
 st.set_page_config(
     page_title="NNPC Internship Portal Dashboard",
-    page_icon="NNNPC",
+    page_icon="🇳🇬",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -80,6 +80,11 @@ def init_db():
         c.execute('''CREATE TABLE IF NOT EXISTS attendance (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, department TEXT, date TEXT, time TEXT, status TEXT)''')
         c.execute('''CREATE TABLE IF NOT EXISTS submissions (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, department TEXT, week TEXT, topic TEXT, filename TEXT, filedata BLOB, date TEXT, status TEXT, grade TEXT, feedback TEXT)''')
         c.execute('''CREATE TABLE IF NOT EXISTS quiz_scores (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, department TEXT, week TEXT, subtopic TEXT, score INTEGER, total INTEGER, date TEXT)''')
+        
+        # New tables for supervisor functionality
+        c.execute('''CREATE TABLE IF NOT EXISTS announcements (id INTEGER PRIMARY KEY AUTOINCREMENT, message TEXT, date TEXT, author TEXT)''')
+        c.execute('''CREATE TABLE IF NOT EXISTS tickets (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, subject TEXT, message TEXT, status TEXT, reply TEXT, date TEXT)''')
+        c.execute('''CREATE TABLE IF NOT EXISTS module_locks (department TEXT, week TEXT, is_locked INTEGER, PRIMARY KEY(department, week))''')
         conn.commit()
 
 init_db()
@@ -170,7 +175,7 @@ def generate_logbook_pdf(username, department):
     create_pdf_table("3. Assessment Scores", quiz_df)
 
     elements.append(Spacer(1, 40))
-    elements.append(Paragraph("_____________________________          _____________________________", styles['Normal']))
+    elements.append(Paragraph("_____________________________         _____________________________", styles['Normal']))
     elements.append(Paragraph("Student Signature & Date                 Supervisor Signature & Date", styles['Normal']))
 
     doc.build(elements)
@@ -582,10 +587,13 @@ else:
         if st.session_state["role"] == "IT Student":
             nav_options = [
                 "Dashboard", "Curriculum", "Master Schedule", "Submissions", 
-                "Onboarding Deck", "Attendance", "Reports", "Export Official Logbook", "Settings"
+                "Help Desk", "Onboarding Deck", "Attendance", "Reports", "Export Official Logbook", "Settings"
             ]
         else:
-            nav_options = ["Supervisor Dashboard", "Review Deliverables", "Attendance Audit", "Quiz Analytics & Leaderboard"]
+            nav_options = [
+                "Supervisor Dashboard", "Review Deliverables", "Attendance & Risk", 
+                "Quiz Analytics", "Broadcasts & Tickets", "Curriculum Controls", "Export Reports"
+            ]
             
         selected_nav = st.radio("Navigation", nav_options, label_visibility="collapsed")
         
@@ -847,6 +855,25 @@ else:
                     st.markdown("</div>", unsafe_allow_html=True)
 
             with body_col2:
+                # Dynamic Announcement Banner
+                latest_announcement = fetch_data("SELECT message, date, author FROM announcements ORDER BY id DESC LIMIT 1")
+                if not latest_announcement.empty:
+                    ann_msg = latest_announcement.iloc[0]['message']
+                    ann_date = latest_announcement.iloc[0]['date']
+                    ann_auth = latest_announcement.iloc[0]['author']
+                else:
+                    ann_msg = "Next Departmental Review is scheduled for Oct 28 – Oct 30. Ensure your logbooks are updated."
+                    ann_date = "System Default"
+                    ann_auth = "Admin"
+
+                st.markdown(f"""
+                    <div class="card-white" style="border-left: 4px solid #FFD100 !important;">
+                        <h4 style="margin: 0 0 8px 0; color: #002B15 !important;">📢 Global Broadcast</h4>
+                        <p style="font-size: 0.75rem; color: #64748B !important; margin: 0 0 8px 0;">From {ann_auth} • {ann_date}</p>
+                        <p style="font-size: 0.85rem; font-weight: 500; margin: 0; color: #0F172A !important;">{ann_msg}</p>
+                    </div>
+                """, unsafe_allow_html=True)
+
                 st.markdown("""
                     <div class="card-white">
                         <h4 style="margin: 0 0 12px 0; color: #002B15 !important;">⚡ Quick Actions</h4>
@@ -861,15 +888,6 @@ else:
                 if st.button("📊 View Reports", use_container_width=True):
                     st.info("Loading weekly report analytics...")
                 st.markdown("</div>", unsafe_allow_html=True)
-
-                st.markdown("""
-                    <div class="card-white" style="border-left: 4px solid #FFD100 !important;">
-                        <h4 style="margin: 0 0 8px 0; color: #002B15 !important;">📢 Important Notice</h4>
-                        <p style="font-size: 0.85rem; font-weight: bold; margin: 0; color: #0F172A !important;">Next Departmental Review</p>
-                        <p style="font-size: 0.78rem; color: #64748B !important; margin: 2px 0 8px 0;">📅 Oct 28 – Oct 30, 2026</p>
-                        <p style="font-size: 0.75rem; margin: 0; color: #334155 !important;">Ensure your logbook and deliverables are up to date before review.</p>
-                    </div>
-                """, unsafe_allow_html=True)
 
                 st.markdown("""
                     <div class="card-white">
@@ -897,46 +915,70 @@ else:
             active_curr = department_curriculums.get(current_dept, [])
 
             for phase_idx, phase in enumerate(active_curr):
-                with st.expander(f"📍 {phase['week']}: {phase['title']} ({phase['status']})"):
-                    st.markdown(f"**Main Weekly Deliverable:** `{phase['deliv']}`")
-                    st.markdown("---")
+                # Verify lock status
+                lock_status = fetch_data("SELECT is_locked FROM module_locks WHERE department=? AND week=?", (current_dept, phase['week']))
+                is_locked = lock_status.iloc[0]['is_locked'] if not lock_status.empty else 0
 
-                    if "subtopics" in phase:
-                        for sub_idx, sub in enumerate(phase["subtopics"]):
-                            st.markdown(f"<h4 style='color: #006837 !important;'>🔹 Subtopic: {sub['name']}</h4>", unsafe_allow_html=True)
+                if is_locked:
+                    with st.expander(f"🔒 {phase['week']}: {phase['title']} (Locked by Supervisor)"):
+                        st.warning("This module is currently locked by your supervisor to prevent skipping ahead in the curriculum.")
+                else:
+                    with st.expander(f"📍 {phase['week']}: {phase['title']} ({phase['status']})"):
+                        st.markdown(f"**Main Weekly Deliverable:** `{phase['deliv']}`")
+                        st.markdown("---")
 
-                            tab1, tab2, tab3 = st.tabs(["📝 Lecture Notes", "🧠 Knowledge Check Quiz", "📋 Assignment"])
+                        if "subtopics" in phase:
+                            for sub_idx, sub in enumerate(phase["subtopics"]):
+                                st.markdown(f"<h4 style='color: #006837 !important;'>🔹 Subtopic: {sub['name']}</h4>", unsafe_allow_html=True)
 
-                            with tab1:
-                                st.info(f"**Study Notes:**\n\n{sub['notes']}")
+                                tab1, tab2, tab3 = st.tabs(["📝 Lecture Notes", "🧠 Knowledge Check Quiz", "📋 Assignment"])
 
-                            with tab2:
-                                st.markdown("#### 🎯 5-Question Quiz")
-                                with st.form(key=f"quiz_form_{phase_idx}_{sub_idx}"):
-                                    user_answers = []
-                                    for q_idx, q_data in enumerate(sub["quiz"]):
-                                        st.write(f"**Q{q_idx+1}:** {q_data['q']}")
-                                        ans = st.radio("Select:", q_data["opts"], key=f"q_{phase_idx}_{sub_idx}_{q_idx}", label_visibility="collapsed")
-                                        user_answers.append((ans, q_data["ans"]))
-                                        st.write("")
+                                with tab1:
+                                    st.info(f"**Study Notes:**\n\n{sub['notes']}")
 
-                                    submitted = st.form_submit_button("Submit Quiz to Supervisor Server")
-                                    if submitted:
-                                        score = sum([1 for user_ans, correct_ans in user_answers if user_ans == correct_ans])
-                                        execute_query("INSERT INTO quiz_scores (username, department, week, subtopic, score, total, date) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                                                      (st.session_state["username"], st.session_state["department"], phase['week'], sub['name'], score, len(sub["quiz"]), str(date.today())))
-                                        if score == len(sub["quiz"]):
-                                            st.success(f"🎉 Perfect Score! {score}/{len(sub['quiz'])}. Saved to Database.")
-                                            st.balloons()
-                                        elif score >= (len(sub["quiz"])/2):
-                                            st.warning(f"👍 Good job! You scored {score}/{len(sub['quiz'])}. Saved to Database.")
-                                        else:
-                                            st.error(f"📉 You scored {score}/{len(sub['quiz'])}. Saved to Database. Please review notes.")
+                                with tab2:
+                                    st.markdown("#### 🎯 5-Question Quiz")
+                                    with st.form(key=f"quiz_form_{phase_idx}_{sub_idx}"):
+                                        user_answers = []
+                                        for q_idx, q_data in enumerate(sub["quiz"]):
+                                            st.write(f"**Q{q_idx+1}:** {q_data['q']}")
+                                            ans = st.radio("Select:", q_data["opts"], key=f"q_{phase_idx}_{sub_idx}_{q_idx}", label_visibility="collapsed")
+                                            user_answers.append((ans, q_data["ans"]))
+                                            st.write("")
 
-                            with tab3:
-                                st.warning(f"**Task Instructions:**\n\n{sub['assignment']}")
-                                if st.button("📤 Upload Completed Assignment", key=f"btn_{phase_idx}_{sub_idx}"):
-                                    st.success("Navigate to the **Submissions** tab to upload your file!")
+                                        submitted = st.form_submit_button("Submit Quiz to Supervisor Server")
+                                        if submitted:
+                                            score = sum([1 for user_ans, correct_ans in user_answers if user_ans == correct_ans])
+                                            execute_query("INSERT INTO quiz_scores (username, department, week, subtopic, score, total, date) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                                                          (st.session_state["username"], st.session_state["department"], phase['week'], sub['name'], score, len(sub["quiz"]), str(date.today())))
+                                            if score == len(sub["quiz"]):
+                                                st.success(f"🎉 Perfect Score! {score}/{len(sub['quiz'])}. Saved to Database.")
+                                                st.balloons()
+                                            elif score >= (len(sub["quiz"])/2):
+                                                st.warning(f"👍 Good job! You scored {score}/{len(sub['quiz'])}. Saved to Database.")
+                                            else:
+                                                st.error(f"📉 You scored {score}/{len(sub['quiz'])}. Saved to Database. Please review notes.")
+
+                                with tab3:
+                                    st.warning(f"**Task Instructions:**\n\n{sub['assignment']}")
+                                    if st.button("📤 Upload Completed Assignment", key=f"btn_{phase_idx}_{sub_idx}"):
+                                        st.success("Navigate to the **Submissions** tab to upload your file!")
+
+        elif selected_nav == "Help Desk":
+            st.subheader("🎫 IT / Supervisor Help Desk & Ticketing")
+            
+            with st.form("ticket_form"):
+                st.markdown("#### Open a New Ticket")
+                t_sub = st.text_input("Subject (e.g., 'Need help with Primavera assignment')")
+                t_msg = st.text_area("Message")
+                if st.form_submit_button("Submit Ticket"):
+                    execute_query("INSERT INTO tickets (username, subject, message, status, reply, date) VALUES (?, ?, ?, 'Open', '', ?)",
+                                  (st.session_state["username"], t_sub, t_msg, str(date.today())))
+                    st.success("Ticket submitted to supervisors.")
+            
+            st.markdown("#### Your Ticket History")
+            my_tickets = fetch_data("SELECT id AS ID, subject AS Subject, status AS Status, reply AS Supervisor_Reply, date AS Date FROM tickets WHERE username=? ORDER BY id DESC", (st.session_state["username"],))
+            st.dataframe(my_tickets, use_container_width=True)
 
         elif selected_nav == "Master Schedule":
             st.subheader("📅 OML 18 Master Internship Schedule & Roadmap")
@@ -1104,6 +1146,32 @@ else:
                 </div>
             """, unsafe_allow_html=True)
 
+            # AT-A-GLANCE METRICS
+            total_students = fetch_data("SELECT COUNT(*) as count FROM users WHERE role='IT Student'").iloc[0]['count']
+            pending_actions = fetch_data("SELECT COUNT(*) as count FROM submissions WHERE status='Pending Review'").iloc[0]['count']
+            avg_score_df = fetch_data("SELECT AVG(score * 100.0 / total) as avg FROM quiz_scores")
+            avg_score = round(avg_score_df.iloc[0]['avg'], 1) if not avg_score_df.empty and pd.notna(avg_score_df.iloc[0]['avg']) else 0
+
+            c1, c2, c3 = st.columns(3)
+            c1.markdown(f"""
+                <div class="metric-card-white" style="border-left: 5px solid #2563EB !important;">
+                    <h4 style="margin:0; color:#64748B;">Total Active Interns</h4>
+                    <h2 style="margin:5px 0; color:#0F172A;">{total_students}</h2>
+                </div>
+            """, unsafe_allow_html=True)
+            c2.markdown(f"""
+                <div class="metric-card-white" style="border-left: 5px solid #D97706 !important;">
+                    <h4 style="margin:0; color:#64748B;">Pending Deliverables</h4>
+                    <h2 style="margin:5px 0; color:#0F172A;">{pending_actions}</h2>
+                </div>
+            """, unsafe_allow_html=True)
+            c3.markdown(f"""
+                <div class="metric-card-white" style="border-left: 5px solid #006837 !important;">
+                    <h4 style="margin:0; color:#64748B;">Avg Cohort Quiz Score</h4>
+                    <h2 style="margin:5px 0; color:#0F172A;">{avg_score}%</h2>
+                </div>
+            """, unsafe_allow_html=True)
+
         elif selected_nav == "Review Deliverables":
             st.subheader("👨‍💼 Grade Student Submissions")
             all_subs = fetch_data("SELECT id, username AS Student, department AS Dept, week AS Week, topic AS Topic, status AS Status, grade AS Grade FROM submissions")
@@ -1123,11 +1191,22 @@ else:
             else:
                 st.info("No deliverables submitted yet.")
 
-        elif selected_nav == "Attendance Audit":
-            st.subheader("📊 Global Student Attendance")
-            st.dataframe(fetch_data("SELECT username AS Student, department AS Dept, date AS Date, time AS Time FROM attendance ORDER BY id DESC"), use_container_width=True)
+        elif selected_nav == "Attendance & Risk":
+            st.subheader("🚩 At-Risk Students & Global Attendance Audit")
+            st.markdown("Identifies students with less than 75% attendance relative to the 16-week cycle expectation.")
+            
+            all_users = fetch_data("SELECT username, department FROM users WHERE role='IT Student'")
+            risk_data = []
+            for _, row in all_users.iterrows():
+                att = fetch_data("SELECT COUNT(*) as c FROM attendance WHERE username=?", (row['username'],)).iloc[0]['c']
+                # Assume 16 total days for testing algorithm
+                att_pct = min(100, int((att / 16) * 100))
+                risk_flag = "🚨 High Risk" if att_pct < 75 else "✅ Good"
+                risk_data.append({"Student": row['username'], "Dept": row['department'], "Attendance %": att_pct, "Status": risk_flag})
+            
+            st.dataframe(pd.DataFrame(risk_data), use_container_width=True)
 
-        elif selected_nav == "Quiz Analytics & Leaderboard":
+        elif selected_nav == "Quiz Analytics":
             st.subheader("🏆 Global Quiz Analytics & Leaderboard")
             leaderboard = fetch_data("SELECT username AS Student, department AS Dept, SUM(score) AS Total_Score FROM quiz_scores GROUP BY username ORDER BY Total_Score DESC")
             if not leaderboard.empty:
@@ -1142,3 +1221,60 @@ else:
                     st.plotly_chart(fig, use_container_width=True)
             else:
                 st.info("No quiz data available yet.")
+
+        elif selected_nav == "Broadcasts & Tickets":
+            st.subheader("📢 Communications Center")
+            tab1, tab2 = st.tabs(["Global Broadcasts", "Student Tickets"])
+            
+            with tab1:
+                with st.form("announcement_form"):
+                    st.markdown("#### Post an Announcement Banner")
+                    msg = st.text_area("Message to Broadcast (Shows on student dashboard)")
+                    if st.form_submit_button("Broadcast to All Students"):
+                        execute_query("INSERT INTO announcements (message, date, author) VALUES (?, ?, ?)",
+                                      (msg, str(date.today()), st.session_state["username"]))
+                        st.success("Broadcast sent successfully!")
+            
+            with tab2:
+                st.markdown("#### Manage Student Tickets")
+                tickets_df = fetch_data("SELECT id, username, subject, message, status FROM tickets WHERE status='Open'")
+                st.dataframe(tickets_df, use_container_width=True)
+                
+                if not tickets_df.empty:
+                    with st.form("reply_form"):
+                        t_id = st.selectbox("Select Ticket ID to Resolve", tickets_df['id'].tolist())
+                        reply = st.text_area("Reply / Resolution")
+                        if st.form_submit_button("Close Ticket"):
+                            execute_query("UPDATE tickets SET status='Closed', reply=? WHERE id=?", (reply, t_id))
+                            st.success("Ticket updated and closed.")
+                            st.rerun()
+
+        elif selected_nav == "Curriculum Controls":
+            st.subheader("🔐 Administrative Curriculum Lock/Unlock")
+            st.markdown("Prevent students from rushing ahead by locking future weekly modules.")
+            
+            dept_select = st.selectbox("Select Department", list(department_curriculums.keys()))
+            actual_weeks = [phase["week"] for phase in department_curriculums.get(dept_select, [])]
+            
+            with st.form("lock_form"):
+                target_week = st.selectbox("Target Module", actual_weeks)
+                action = st.radio("Action", ["Lock", "Unlock"])
+                
+                if st.form_submit_button("Apply Action"):
+                    is_locked = 1 if action == "Lock" else 0
+                    execute_query("INSERT OR REPLACE INTO module_locks (department, week, is_locked) VALUES (?, ?, ?)",
+                                  (dept_select, target_week, is_locked))
+                    st.success(f"{action}ed {target_week} for {dept_select} Department.")
+
+        elif selected_nav == "Export Reports":
+            st.subheader("📑 Generate & Export Cohort Data")
+            st.markdown("Export SQLite tables to Excel-compatible CSV files.")
+            
+            users_csv = fetch_data("SELECT username, department, email FROM users WHERE role='IT Student'").to_csv(index=False)
+            st.download_button("📥 Export Student Roster (CSV)", users_csv, "nnpc_interns.csv", "text/csv")
+            
+            att_csv = fetch_data("SELECT * FROM attendance").to_csv(index=False)
+            st.download_button("📥 Export Global Attendance Log (CSV)", att_csv, "nnpc_attendance.csv", "text/csv")
+            
+            grades_csv = fetch_data("SELECT username, department, week, topic, grade FROM submissions").to_csv(index=False)
+            st.download_button("📥 Export Deliverable Grades (CSV)", grades_csv, "nnpc_grades.csv", "text/csv")
