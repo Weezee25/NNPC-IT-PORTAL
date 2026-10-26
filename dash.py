@@ -24,10 +24,35 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Helper function to set base64 backgrounds dynamically with robust CSS overrides
+def set_background(image_path, overlay_color="rgba(241, 245, 249, 0.85)"):
+    if not os.path.exists(image_path):
+        # Fallback to standard color if image is missing so the app doesn't break
+        st.markdown("""<style>[data-testid="stAppViewContainer"], .stApp { background-color: #F1F5F9 !important; }</style>""", unsafe_allow_html=True)
+        return
+
+    with open(image_path, "rb") as f:
+        encoded = base64.b64encode(f.read()).decode()
+    
+    st.markdown(f"""
+    <style>
+    /* Apply background to the main app containers */
+    [data-testid="stAppViewContainer"], .stApp {{
+        background-image: linear-gradient({overlay_color}, {overlay_color}), url("data:image/jpeg;base64,{encoded}") !important;
+        background-size: cover !important;
+        background-position: center !important;
+        background-attachment: fixed !important;
+    }}
+    /* Force transparency on any solid layers that sit on top of the background */
+    [data-testid="stHeader"] {{ background: transparent !important; }}
+    [data-testid="stApp"] {{ background: transparent !important; }}
+    main {{ background: transparent !important; }}
+    </style>
+    """, unsafe_allow_html=True)
+
 # Deep CSS Overrides to lock card text & backgrounds across light & dark browser modes
 st.markdown("""
     <style>
-    .stApp { background-color: #F1F5F9 !important; }
     .hero-banner {
         background: linear-gradient(135deg, #002B15 0%, #004D25 50%, #006837 100%) !important;
         padding: 26px 32px; border-radius: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.12);
@@ -524,6 +549,9 @@ if "role" not in st.session_state: st.session_state["role"] = ""
 # 6. LOGIN & REGISTRATION INTERFACE
 # ==========================================
 if not st.session_state["logged_in"]:
+    # ---> APPLY LOGIN BACKGROUND HERE <---
+    set_background("ai-generated-aerial-view-offshore-drilling-rig-at-the-offshore-location-during-sunset-photo.jpg", "rgba(241, 245, 249, 0.80)")
+    
     col_l1, col_l2, col_l3 = st.columns([1, 1.5, 1])
     with col_l2:
         st.markdown("<br><br>", unsafe_allow_html=True)
@@ -572,6 +600,9 @@ if not st.session_state["logged_in"]:
                     else:
                         st.error("Username already exists.")
 else:
+    # ---> APPLY DASHBOARD BACKGROUND HERE <---
+    set_background("istockphoto-1457436123-612x612.jpg", "rgba(241, 245, 249, 0.90)")
+
     # ==========================================
     # 7. SIDEBAR NAVIGATION
     # ==========================================
@@ -789,7 +820,7 @@ else:
                     )
                     fig_gantt.update_yaxes(autorange="reversed")
                     fig_gantt.update_layout(
-                        template="plotly_white", paper_bgcolor='#FFFFFF', plot_bgcolor='#F8FAFC',
+                        template="plotly_white", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
                         font=dict(color='#0F172A', size=11), height=260, margin=dict(t=5, b=5, l=5, r=5)
                     )
                     st.plotly_chart(fig_gantt, use_container_width=True)
@@ -820,7 +851,7 @@ else:
                         })
                         fig_att = px.bar(att_chart_data, x="Week", y="Days", color_discrete_sequence=["#006837"])
                         fig_att.update_layout(
-                            template="plotly_white", paper_bgcolor='#FFFFFF', plot_bgcolor='#F8FAFC',
+                            template="plotly_white", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
                             font=dict(color='#0F172A'), height=130, margin=dict(t=5, b=5, l=5, r=5), 
                             xaxis_title=None, yaxis_title=None
                         )
@@ -1006,7 +1037,7 @@ else:
             )
             fig_gantt_full.update_yaxes(autorange="reversed")
             fig_gantt_full.update_layout(
-                template="plotly_white", paper_bgcolor='#FFFFFF', plot_bgcolor='#F8FAFC',
+                template="plotly_white", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
                 font=dict(color='#0F172A', size=12), height=380
             )
             st.plotly_chart(fig_gantt_full, use_container_width=True)
@@ -1111,7 +1142,7 @@ else:
                 "Avg Completion (%)": [39, 72, 20, 85, 45, 65]
             })
             fig_rep = px.bar(rep_df, x="Department", y="Avg Completion (%)", color="Department", color_discrete_sequence=["#006837", "#FFD100", "#00A859", "#00381C", "#0B6623", "#2563EB"])
-            fig_rep.update_layout(template="plotly_white", paper_bgcolor='#FFFFFF', plot_bgcolor='#F8FAFC', font=dict(color='#0F172A'), height=350)
+            fig_rep.update_layout(template="plotly_white", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font=dict(color='#0F172A'), height=350)
             st.plotly_chart(fig_rep, use_container_width=True)
 
         elif selected_nav == "Export Official Logbook":
@@ -1217,7 +1248,7 @@ else:
                 with col2:
                     st.markdown("#### 📈 Scores by Department")
                     fig = px.bar(leaderboard, x="Dept", y="Total_Score", color="Student", barmode="group", color_discrete_sequence=px.colors.sequential.Greens_r)
-                    fig.update_layout(template="plotly_white", paper_bgcolor='#FFFFFF', plot_bgcolor='#F8FAFC', font=dict(color='#0F172A'))
+                    fig.update_layout(template="plotly_white", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font=dict(color='#0F172A'))
                     st.plotly_chart(fig, use_container_width=True)
             else:
                 st.info("No quiz data available yet.")
