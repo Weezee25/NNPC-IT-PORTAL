@@ -212,7 +212,7 @@ def generate_logbook_pdf(username, department):
 # ==========================================
 department_curriculums = {
     "Projects": [
-        {"week": "Week 1 – 4", "title": "Project Lifecycle & Regulations", "deliv": "Regulatory Intelligence Summary", "status": "✓ Completed", "color": "#059669",
+        {"week": "Week 1", "title": "Project Lifecycle & Regulations", "deliv": "Regulatory Intelligence Summary", "status": "✓ Completed", "color": "#059669",
          "subtopics": [{
              "name": "NUPRC Regulatory Framework",
              "notes": "The Nigerian Upstream Petroleum Regulatory Commission (NUPRC) is the primary regulatory body for upstream operations. Compliance requires strict adherence to EGASPIN (Environmental Guidelines) and the Petroleum Industry Act (PIA) of 2021, which dictates fiscal frameworks and host community development trusts.",
@@ -225,7 +225,7 @@ department_curriculums = {
              ],
              "assignment": "Read the PIA 2021 summary document. Write a 2-page report on how the Host Community Development Trust impacts project OPEX budgeting."
          }]},
-        {"week": "Week 5 – 8", "title": "FEED & Costing Models", "deliv": "Facility Manifold Cost Model", "status": "⏳ In Progress", "color": "#D97706",
+        {"week": "Week 2", "title": "FEED & Costing Models", "deliv": "Facility Manifold Cost Model", "status": "⏳ In Progress", "color": "#D97706",
          "subtopics": [{
              "name": "Front-End Engineering Design (FEED)",
              "notes": "FEED comes after the conceptual design and feasibility study. It focuses on technical requirements, identifying project risks, and estimating rough investment costs (usually accurate to +/- 15%). Deliverables include P&IDs, equipment data sheets, and project execution plans.",
@@ -238,7 +238,7 @@ department_curriculums = {
              ],
              "assignment": "Using the provided template, develop a Level 3 cost estimate for the installation of a 4-slot production manifold."
          }]},
-        {"week": "Week 9 – 12", "title": "Primavera P6 Scheduling", "deliv": "Baseline Master Schedule", "status": "🔒 Not Started", "color": "#64748B",
+        {"week": "Week 3", "title": "Primavera P6 Scheduling", "deliv": "Baseline Master Schedule", "status": "🔒 Not Started", "color": "#64748B",
          "subtopics": [{
              "name": "Critical Path Method (CPM)",
              "notes": "The Critical Path Method identifies the longest stretch of dependent activities and measures the time required to complete them. In Primavera P6, activities on the critical path have zero 'Total Float'. Delaying these delays the entire project.",
@@ -251,7 +251,7 @@ department_curriculums = {
              ],
              "assignment": "Create a 20-activity schedule in Primavera P6 (or MS Project) for a flowline replacement. Identify the critical path and submit the Gantt PDF."
          }]},
-        {"week": "Week 13 – 16", "title": "Site Inspections", "deliv": "Final Project Report", "status": "🔒 Not Started", "color": "#64748B",
+        {"week": "Week 4", "title": "Site Inspections", "deliv": "Final Project Report", "status": "🔒 Not Started", "color": "#64748B",
          "subtopics": [{
              "name": "Pre-Commissioning Audits",
              "notes": "Pre-commissioning involves verifying that equipment installation complies with design data. Key steps include hydro-testing pipelines, loop checking instruments, and verifying P&ID line walks to ensure mechanical completion.",
@@ -266,7 +266,7 @@ department_curriculums = {
          }]}
     ],
     "Subsurface": [
-        {"week": "Week 1 – 4", "title": "2D/3D Seismic Horizon Mapping", "deliv": "Seismic Horizon Report", "status": "✓ Completed", "color": "#059669",
+        {"week": "Week 1", "title": "2D/3D Seismic Horizon Mapping", "deliv": "Seismic Horizon Report", "status": "✓ Completed", "color": "#059669",
          "subtopics": [{
              "name": "Seismic Interpretation Basics",
              "notes": "Seismic interpretation involves analyzing acoustic waves reflected from rock boundaries to map sub-surface structures. Horizons represent geological time boundaries. Faults appear as discontinuities in these horizons.",
@@ -279,7 +279,7 @@ department_curriculums = {
              ],
              "assignment": "Analyze the provided seismic cross-section. Map the primary horizon and identify at least two major fault lines."
          }]},
-        {"week": "Week 5 – 8", "title": "Petrophysical Log Evaluation", "deliv": "Net Pay & Water Saturation", "status": "⏳ In Progress", "color": "#D97706",
+        {"week": "Week 2", "title": "Petrophysical Log Evaluation", "deliv": "Net Pay & Water Saturation", "status": "⏳ In Progress", "color": "#D97706",
          "subtopics": [{
              "name": "Wireline Logging",
              "notes": "Logs measure physical properties of formations. Gamma Ray logs identify lithology (shale vs sand). Resistivity logs differentiate between hydrocarbons (high resistivity) and formation water (low resistivity).",
@@ -292,7 +292,7 @@ department_curriculums = {
              ],
              "assignment": "Use the provided well log data (Gamma Ray and Resistivity) to calculate the Net-to-Gross ratio of the reservoir interval."
          }]},
-        {"week": "Week 9 – 12", "title": "Reservoir Material Balance", "deliv": "Reserves Estimation Analysis", "status": "🔒 Not Started", "color": "#64748B",
+        {"week": "Week 3", "title": "Reservoir Material Balance", "deliv": "Reserves Estimation Analysis", "status": "🔒 Not Started", "color": "#64748B",
          "subtopics": [{
              "name": "Drive Mechanisms",
              "notes": "Reservoir drive mechanisms dictate how oil is pushed to the surface. Common types include Water Drive (aquifer expansion), Solution Gas Drive (gas bubbling out of oil), and Gas Cap Drive (expanding gas cap).",
@@ -305,7 +305,7 @@ department_curriculums = {
              ],
              "assignment": "Write a brief report comparing the expected recovery factors of a Water Drive reservoir vs. a Solution Gas Drive reservoir."
          }]},
-        {"week": "Week 13 – 16", "title": "Reservoir Simulation", "deliv": "Integrated Subsurface Model", "status": "🔒 Not Started", "color": "#64748B",
+        {"week": "Week 4", "title": "Reservoir Simulation", "deliv": "Integrated Subsurface Model", "status": "🔒 Not Started", "color": "#64748B",
          "subtopics": [{
              "name": "Dynamic Modeling",
              "notes": "Dynamic models simulate fluid flow over time using grid blocks. It combines static geological properties (porosity/permeability) with PVT fluid data and relative permeability curves to predict future production.",
@@ -320,7 +320,7 @@ department_curriculums = {
          }]}
     ],
     "ICT": [
-        {"week": "Week 1 – 4", "title": "Network & Cybersecurity", "deliv": "Network Topology Audit", "status": "✓ Completed", "color": "#059669",
+        {"week": "Week 1", "title": "Network & Cybersecurity", "deliv": "Network Topology Audit", "status": "✓ Completed", "color": "#059669",
          "subtopics": [{
              "name": "Firewall & VLAN Configurations",
              "notes": "VLANs (Virtual Local Area Networks) segment network traffic for security and performance. Firewalls control incoming/outgoing traffic based on rules. NNPC uses strict IT/OT separation to protect field operational tech from corporate networks.",
@@ -333,7 +333,7 @@ department_curriculums = {
              ],
              "assignment": "Draw a basic network topology diagram showing an IT corporate network separated from an OT field network by a firewall."
          }]},
-        {"week": "Week 5 – 8", "title": "Enterprise Database Admin", "deliv": "Database Security Audit", "status": "⏳ In Progress", "color": "#D97706",
+        {"week": "Week 2", "title": "Enterprise Database Admin", "deliv": "Database Security Audit", "status": "⏳ In Progress", "color": "#D97706",
          "subtopics": [{
              "name": "SQL & Access Controls",
              "notes": "Database administration ensures data integrity and availability. Role-Based Access Control (RBAC) ensures users only access data necessary for their jobs. SQL commands like GRANT and REVOKE manage these permissions.",
@@ -346,7 +346,7 @@ department_curriculums = {
              ],
              "assignment": "Write a SQL script that creates a 'ProductionData' table and GRANTS read-only access to a 'JuniorEngineer' role."
          }]},
-        {"week": "Week 9 – 12", "title": "Software Engineering & ITIL", "deliv": "Service Desk Automation", "status": "🔒 Not Started", "color": "#64748B",
+        {"week": "Week 3", "title": "Software Engineering & ITIL", "deliv": "Service Desk Automation", "status": "🔒 Not Started", "color": "#64748B",
          "subtopics": [{
              "name": "ITIL Incident Management",
              "notes": "ITIL is a framework for IT service management. Incident management aims to restore normal service operation as quickly as possible. SLAs (Service Level Agreements) define the acceptable resolution time based on ticket priority.",
@@ -359,7 +359,7 @@ department_curriculums = {
              ],
              "assignment": "Draft an automated email response template for a P1 Major Incident regarding an Enterprise ERP server crash."
          }]},
-        {"week": "Week 13 – 16", "title": "Cloud Infrastructure", "deliv": "Cloud System Deployment", "status": "🔒 Not Started", "color": "#64748B",
+        {"week": "Week 4", "title": "Cloud Infrastructure", "deliv": "Cloud System Deployment", "status": "🔒 Not Started", "color": "#64748B",
          "subtopics": [{
              "name": "Cloud Deployment Models",
              "notes": "Cloud computing offers IaaS, PaaS, and SaaS. A Public Cloud is shared infrastructure (AWS, Azure). A Private Cloud is dedicated to one organization. A Hybrid cloud combines both, often used in Oil & Gas for data sovereignty.",
@@ -374,7 +374,7 @@ department_curriculums = {
          }]}
     ],
     "Facility": [
-        {"week": "Week 1 – 4", "title": "HVAC & Power Systems", "deliv": "Maintenance Log & Safety Check", "status": "✓ Completed", "color": "#059669",
+        {"week": "Week 1", "title": "HVAC & Power Systems", "deliv": "Maintenance Log & Safety Check", "status": "✓ Completed", "color": "#059669",
          "subtopics": [{
              "name": "Uninterruptible Power Supply (UPS)",
              "notes": "Facility power stability is critical. UPS systems provide emergency power to loads when the input power source fails, preventing data loss in server rooms and keeping critical control systems online until generators start.",
@@ -387,7 +387,7 @@ department_curriculums = {
              ],
              "assignment": "Perform a theoretical load calculation for a server room. Determine the kVA rating required for a UPS to sustain a 15kW load for 30 minutes."
          }]},
-        {"week": "Week 5 – 8", "title": "HSE & Emergency Protocols", "deliv": "Hazard Identification Assessment", "status": "⏳ In Progress", "color": "#D97706",
+        {"week": "Week 2", "title": "HSE & Emergency Protocols", "deliv": "Hazard Identification Assessment", "status": "⏳ In Progress", "color": "#D97706",
          "subtopics": [{
              "name": "Permit To Work (PTW) Systems",
              "notes": "PTW is a formal written system used to control certain types of potentially hazardous work. Hot Work permits are for tasks that generate heat/sparks (welding). Cold Work is for non-sparking tasks.",
@@ -400,7 +400,7 @@ department_curriculums = {
              ],
              "assignment": "Fill out a sample Job Hazard Analysis (JHA) and Hot Work Permit template for welding a broken pipe bracket in the utility room."
          }]},
-        {"week": "Week 9 – 12", "title": "Asset Integrity Mgmt", "deliv": "Preventive Maintenance Schedule", "status": "🔒 Not Started", "color": "#64748B",
+        {"week": "Week 3", "title": "Asset Integrity Mgmt", "deliv": "Preventive Maintenance Schedule", "status": "🔒 Not Started", "color": "#64748B",
          "subtopics": [{
              "name": "Preventive vs Corrective Maintenance",
              "notes": "Corrective maintenance fixes things after they break (run-to-failure). Preventive Maintenance (PM) performs regular checks to prevent failures. Predictive maintenance uses sensors (vibration, temp) to predict failures before they happen.",
@@ -413,7 +413,7 @@ department_curriculums = {
              ],
              "assignment": "Create a 6-month Preventive Maintenance schedule in Excel for an industrial HVAC Chiller unit."
          }]},
-        {"week": "Week 13 – 16", "title": "Energy Efficiency & Auditing", "deliv": "Energy Optimization Strategy", "status": "🔒 Not Started", "color": "#64748B",
+        {"week": "Week 4", "title": "Energy Efficiency & Auditing", "deliv": "Energy Optimization Strategy", "status": "🔒 Not Started", "color": "#64748B",
          "subtopics": [{
              "name": "Lighting and HVAC Optimization",
              "notes": "Energy audits identify waste. Replacing fluorescent lights with LEDs reduces lighting load. Installing Variable Frequency Drives (VFDs) on HVAC fan motors allows them to slow down when full cooling isn't needed, saving massive amounts of power.",
@@ -428,7 +428,7 @@ department_curriculums = {
          }]}
     ],
     "Legal": [
-        {"week": "Week 1 – 4", "title": "PIA Framework", "deliv": "PIA Impact Analysis Memo", "status": "✓ Completed", "color": "#059669",
+        {"week": "Week 1", "title": "PIA Framework", "deliv": "PIA Impact Analysis Memo", "status": "✓ Completed", "color": "#059669",
          "subtopics": [{
              "name": "Petroleum Industry Act 2021 Overview",
              "notes": "The PIA overhauled Nigeria's oil and gas legal framework. It established two main regulators: NUPRC (Upstream) and NMDPRA (Midstream/Downstream). It transitioned NNPC from a corporation to a limited liability company (NNPC Ltd).",
@@ -441,7 +441,7 @@ department_curriculums = {
              ],
              "assignment": "Draft a legal memo summarizing the shift of regulatory powers from the old DPR to the new NUPRC and NMDPRA."
          }]},
-        {"week": "Week 5 – 8", "title": "Joint Venture Contracts", "deliv": "JV Legal Contract Brief", "status": "⏳ In Progress", "color": "#D97706",
+        {"week": "Week 2", "title": "Joint Venture Contracts", "deliv": "JV Legal Contract Brief", "status": "⏳ In Progress", "color": "#D97706",
          "subtopics": [{
              "name": "Production Sharing Contracts (PSC) vs JV",
              "notes": "In a Joint Venture (JV), partners share exploration costs and oil produced based on equity stakes. In a Production Sharing Contract (PSC), the IOC bears the exploration cost/risk; if oil is found, they recover costs ('Cost Oil') and share the remaining ('Profit Oil') with the state.",
@@ -454,7 +454,7 @@ department_curriculums = {
              ],
              "assignment": "Compare the financial risks for NNPC under a standard JV agreement versus a PSC deepwater agreement."
          }]},
-        {"week": "Week 9 – 12", "title": "Corporate Governance", "deliv": "Arbitration & Legal Case Study", "status": "🔒 Not Started", "color": "#64748B",
+        {"week": "Week 3", "title": "Corporate Governance", "deliv": "Arbitration & Legal Case Study", "status": "🔒 Not Started", "color": "#64748B",
          "subtopics": [{
              "name": "Dispute Resolution & Arbitration",
              "notes": "Oil and Gas disputes avoid local courts when possible to ensure neutrality and speed. Arbitration is a binding process where an independent arbitrator rules on the dispute. Clauses for arbitration locations (e.g., London, Paris) are baked into JOAs.",
@@ -467,7 +467,7 @@ department_curriculums = {
              ],
              "assignment": "Review the provided Force Majeure case study. Write a legal opinion on whether a drop in global oil prices qualifies as a Force Majeure event."
          }]},
-        {"week": "Week 13 – 16", "title": "Environmental Energy Law", "deliv": "Compliance Checklist", "status": "🔒 Not Started", "color": "#64748B",
+        {"week": "Week 4", "title": "Environmental Energy Law", "deliv": "Compliance Checklist", "status": "🔒 Not Started", "color": "#64748B",
          "subtopics": [{
              "name": "Gas Flaring Regulations",
              "notes": "Nigeria has stringent laws against routine gas flaring to reduce carbon emissions. The Nigerian Gas Flare Commercialization Programme (NGFCP) aims to eliminate flaring by charging heavy penalties and offering flare sites to third-party investors for commercialization.",
@@ -482,7 +482,7 @@ department_curriculums = {
          }]}
     ],
     "Finance": [
-        {"week": "Week 1 – 4", "title": "Oil & Gas Cost Accounting", "deliv": "Cost Allocation Audit Report", "status": "✓ Completed", "color": "#059669",
+        {"week": "Week 1", "title": "Oil & Gas Cost Accounting", "deliv": "Cost Allocation Audit Report", "status": "✓ Completed", "color": "#059669",
          "subtopics": [{
              "name": "Successful Efforts vs Full Cost",
              "notes": "Two main accounting methods for exploration. 'Successful Efforts' capitalizes only the costs of successful wells; dry holes are expensed immediately. 'Full Cost' capitalizes all exploration costs (both successful and dry holes) into the asset pool.",
@@ -495,7 +495,7 @@ department_curriculums = {
              ],
              "assignment": "Given a dataset of 3 drilled wells (2 dry, 1 successful), calculate the total capitalized cost using both the Successful Efforts and Full Cost methods."
          }]},
-        {"week": "Week 5 – 8", "title": "JV Cash Calls & Billing", "deliv": "Cash Call Reconciliation Sheet", "status": "⏳ In Progress", "color": "#D97706",
+        {"week": "Week 2", "title": "JV Cash Calls & Billing", "deliv": "Cash Call Reconciliation Sheet", "status": "⏳ In Progress", "color": "#D97706",
          "subtopics": [{
              "name": "Cash Call Operations",
              "notes": "A Cash Call is a request for payment issued by the Joint Venture operator to non-operating partners. It funds upcoming approved OPEX and CAPEX. Failure to pay cash calls results in default, affecting the partner's equity lifting rights.",
@@ -508,7 +508,7 @@ department_curriculums = {
              ],
              "assignment": "Review a simulated Joint Interest Billing statement and reconcile the Operator's cash call request against the approved quarterly budget."
          }]},
-        {"week": "Week 9 – 12", "title": "CAPEX & OPEX Budgeting", "deliv": "Quarterly Budget Forecast Model", "status": "🔒 Not Started", "color": "#64748B",
+        {"week": "Week 3", "title": "CAPEX & OPEX Budgeting", "deliv": "Quarterly Budget Forecast Model", "status": "🔒 Not Started", "color": "#64748B",
          "subtopics": [{
              "name": "Capital vs Operating Expenditure",
              "notes": "CAPEX refers to money spent acquiring or upgrading physical assets (e.g., building a rig). OPEX refers to day-to-day operational costs (e.g., maintenance, salaries, chemicals). CAPEX is depreciated over time; OPEX is deducted in the current tax year.",
@@ -521,7 +521,7 @@ department_curriculums = {
              ],
              "assignment": "Categorize a provided list of 20 expense items into CAPEX and OPEX, and calculate the total projected OPEX budget for the quarter."
          }]},
-        {"week": "Week 13 – 16", "title": "Tax Compliance & Audit", "deliv": "Tax Compliance Summary", "status": "🔒 Not Started", "color": "#64748B",
+        {"week": "Week 4", "title": "Tax Compliance & Audit", "deliv": "Tax Compliance Summary", "status": "🔒 Not Started", "color": "#64748B",
          "subtopics": [{
              "name": "Hydrocarbon Tax & Royalty",
              "notes": "Under the PIA, taxation changed from PPT (Petroleum Profits Tax) to a dual system: Hydrocarbon Tax (HT) and Company Income Tax (CIT). Royalties are paid to the government based on production volume and price, acting as a direct cost before profit calculations.",
@@ -668,8 +668,8 @@ else:
     # ==========================================
     if st.session_state["role"] == "IT Student":
         if selected_nav == "Dashboard":
-            start_date = date(2026, 10, 1)
-            end_date = date(2027, 1, 25)
+            start_date = date(2026, 8, 1)
+            end_date = date(2026, 11, 30)
             today = date.today()
 
             days_left = max(0, (end_date - today).days)
@@ -704,7 +704,7 @@ else:
                             <span style="font-size: 0.85rem; background: #006837; padding: 2px 8px; border-radius: 10px; color: white !important;">Active</span>
                         </div>
                         <h3 style="margin: 8px 0 4px 0; font-size: 1.5rem; color: #FFFFFF !important;">16 Weeks</h3>
-                        <p style="font-size: 0.78rem; color: #D0D0D0 !important; margin: 0;">Oct 1, 2026 – Jan 25, 2027</p>
+                        <p style="font-size: 0.78rem; color: #D0D0D0 !important; margin: 0;">Aug 1, 2026 – Nov 30, 2026</p>
                         <hr style="border-color: rgba(255,255,255,0.2); margin: 10px 0;">
                         <div style="font-size: 0.78rem; display: flex; justify-content: space-between;">
                             <span style="color: #FFFFFF !important;">Overall Progress</span>
